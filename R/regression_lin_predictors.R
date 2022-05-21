@@ -1,8 +1,8 @@
 regression_lin_predictors <- function(.data
                                       , .outcome
-                                      , .predictors = NULL
-                                      , .covariates = NULL
-                                      , .annotation = annotation
+                                      , .predictors
+                                      , .covariates
+                                      , .annotation
                                       , .summary = FALSE
                                       , .subset = NULL
                                       , .std.prd = FALSE

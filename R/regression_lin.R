@@ -1,8 +1,9 @@
 regression_lin <- function(.data
                            , .outcomes
-                           , .predictors
+                           , .predictors = NULL
                            , .covariates = NULL
                            , .annotation = annotation
+                           , .cpus = 1
                            , ...
   
 ){
@@ -11,11 +12,13 @@ regression_lin <- function(.data
   
   } else if (class(.data) == "data.frame") {
   
-  return(regression_lin_outcomes(.data
-                                 , .outcomes
-                                 , .predictors
-                                 , .annotation))
+  return(regression_lin_outcomes(.data = .data
+                                 , .outcomes = .outcomes
+                                 , .predictors = .predictors
+                                 , .covariates = .covariates
+                                 , .annotation = .annotation
+                                 , .parallel = .parallel
+                                 , .cpus = .cpus)
+         )
   }
-  
-  
-  }
+}

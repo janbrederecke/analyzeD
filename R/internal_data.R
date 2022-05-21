@@ -20,5 +20,6 @@ internal_data <- function(size = 1
   annotation <<- annotation
   
   outcomes <<- names(d)[4:5]
-  predictors <<- names(d)[1:3]
+  predictors <<- names(d)[1:2]
+  covariates <<- names(d)[3]
 }
