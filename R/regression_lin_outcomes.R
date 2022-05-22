@@ -1,63 +1,59 @@
 regression_lin_outcomes <- function(.data
                                     , .outcomes
-                                    , .predictors 
-                                    , .covariates
+                                    , .predictor
                                     , .annotation
-                                    , .cpus
+                                    , .summary = FALSE
+                                    , .std.pred = FALSE
                                     , ...
 ){
-  
-  # Processing on single CPU  
-  if (.cpus == 1) {
-  
-    fit_list <- lapply(.outcomes, function(outcome) {
-      regression_lin_predictors(.data = .data
-                                , .outcome = outcome
-                                , .predictors = .predictors
-                                , .covariates = .covariates
-                                , .annotation = .annotation)
-    })
+    fit_list <- list()
+    .outcomes <- .outcomes[which(!.outcomes %in% .predictor)]
     
+    for (i in seq_along(.outcomes)) {
+      
+      formula <- as.formula(paste0(paste(.outcomes[i]),
+                                   "~",
+                                   paste(.predictor, collapse = "+")))
+      
+      model <- lm(formula, data = .data, x = TRUE, ...)
+
+      tbl <- broom::tidy(model, conf.int = TRUE)
+      
+      for (j in 2:nrow(tbl)) {
+        tbl$term[j] <- .annotation[[2]][which(.annotation[[1]] %in% tbl$term[j])]
+        
+      }
+      
+      fit_list[[i]] <- dplyr::select(tbl,
+                                     term,
+                                     estimate,
+                                     conf.low,
+                                     conf.high,
+                                     p.value)
+      fit_list[[i]][ncol(fit_list[[i]]) + 1] <- NA
+      fit_list[[i]][nrow(fit_list[[i]]) + 1, 7] <-
+        broom::glance(model)$r.squared
+      fit_list[[i]][nrow(fit_list[[i]]), 1] <-
+        "R<sup>2</sup>"
+      fit_list[[i]][nrow(fit_list[[i]]) + 1, 7] <-
+        broom::glance(model)$adj.r.squared
+      fit_list[[i]][nrow(fit_list[[i]]), 1] <-
+        "Adjusted R<sup>2</sup>"
+      fit_list[[i]][nrow(fit_list[[i]]) + 1, 1] <-
+        paste0("<i>N</i> used: ",
+               broom::glance(model)$nobs)
+      fit_list[[i]][6] <-
+        ifelse(fit_list[[i]]$p.value < .05, "&lt;.05*", "")
+      names(fit_list[[i]]) <- c(
+        "Term",
+        "Estimate",
+        "CI (low)",
+        "CI (high)",
+        "<i>p</i>-Value",
+        "Significance",
+        "R<sup>2</sup>"
+      )
+    }
     names(fit_list) <- .annotation[.outcomes, "pname"]
     fit_list
-  
-  # Processing on multiple CPUS  
-  } else if (.cpus >= 1) {
-    
-    print(paste0("Parallel processing. Using ", .cpus, " cores."))
-    # Register cluster
-    library(foreach)
-    library(doRNG)
-    library(parallel)
-    library(doParallel)
-    
-    my_cluster <- makeCluster(.cpus)
-    registerDoParallel(cl = my_cluster)
-    
-    n <- length(.outcomes)
-    
-    # Calculate regressions for each outcome on a single CPU
-    fit_list <- foreach(
-      i = 1:n,
-      .packages = c("broom", "dplyr", "stringr"),
-      .export = c("regression_lin_predictors")
-      
-    ) %dopar% {
-      
-      outcome <- .outcomes[i]
-      
-      ## Fit regression models for specified outcome
-      fit_list_predictors <- regression_lin_predictors(.data
-                                                       , .outcome = outcome
-                                                       , .predictors
-                                                       , .covariates
-                                                       , .annotation
-                                )
-      
-      names(fit_list_predictors) <- i
-      return(fit_list_predictors)
-    }
-    stopCluster(cl = my_cluster)
-    fit_list
   }
-}

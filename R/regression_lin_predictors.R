@@ -4,7 +4,6 @@ regression_lin_predictors <- function(.data
                                       , .covariates
                                       , .annotation
                                       , .summary = FALSE
-                                      , .subset = NULL
                                       , .std.prd = FALSE
                                       , ...
 ){
@@ -48,11 +47,6 @@ regression_lin_predictors <- function(.data
           formula <- paste0(paste(.outcome), "~",
                             paste(.predictors[i]))
         }
-      }
-      
-      if (!is.null(.subset)) {
-        
-        .data <- .data[.subset,]
       }
       
       model <- lm(formula, data = .data, x = TRUE, ...)
