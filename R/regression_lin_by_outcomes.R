@@ -19,8 +19,6 @@ regression_lin_by_outcomes <- function(.data
                                 , .annotation = .annotation,
                                 , .std_prd = .std_prd)
     })
-    
-    names(fit_list) <- .annotation[.outcomes, "pname"]
     fit_list
   
   # Processing on multiple CPUS  
@@ -56,11 +54,12 @@ regression_lin_by_outcomes <- function(.data
                                                        , .annotation = .annotation
                                                        , .std_prd = .std_prd
                                 )
-      
-      names(fit_list_predictors) <- .predictors
       return(fit_list_predictors)
     }
     stopCluster(cl = my_cluster)
     fit_list
   }
+  
+  names(fit_list) <- .outcomes
+  fit_list
 }

@@ -95,5 +95,6 @@ regression_lin_predictors <- function(.data
       names(summary_table)[7] <- "<i>N</i> used: "
       fit_list[["Summary"]] <- summary_table
     }
+    names(fit_list) <- .predictors
     fit_list
   }

@@ -65,6 +65,6 @@ regression_lin_outcomes <- function(.data
         "R<sup>2</sup>"
       )
     }
-    names(fit_list) <- .annotation[.outcomes, "pname"]
+    names(fit_list) <- .outcomes
     fit_list
   }
