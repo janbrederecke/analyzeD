@@ -3,9 +3,8 @@ regression_lin_predictors <- function(.data
                                       , .predictors
                                       , .covariates
                                       , .annotation
-                                      , .summary = FALSE
-                                      , .std_prd = FALSE
-                                      , ...
+                                      , .std_prd
+                                      , .summary
 ){
   fit_list <- vector(mode = "list", length = length(.predictors))
   .predictors <- .predictors[which(!.predictors %in% .outcome)]
@@ -49,7 +48,7 @@ regression_lin_predictors <- function(.data
         }
       }
       
-      model <- lm(formula, data = .data, x = TRUE, ...)
+      model <- lm(formula, data = .data, x = TRUE)
       tbl <- broom::tidy(model, conf.int = TRUE)
       
       for (j in 2:nrow(tbl)) {
@@ -83,7 +82,9 @@ regression_lin_predictors <- function(.data
         "R<sup>2</sup>"
       )
     }
-    names(fit_list) <- .annotation[.predictors, "pname"]
+  
+    names(fit_list) <- .predictors
+    
     if (.summary == TRUE) {
       summary_table <- data.frame()
       for (i in seq_along(fit_list)) {
@@ -93,8 +94,8 @@ regression_lin_predictors <- function(.data
                                                        1], "<i>N</i> used: "))
       }
       names(summary_table)[7] <- "<i>N</i> used: "
-      fit_list[["Summary"]] <- summary_table
+      fit_list[["summary"]] <- summary_table
     }
-    names(fit_list) <- .predictors
+
     fit_list
   }

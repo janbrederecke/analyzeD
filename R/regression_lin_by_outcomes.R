@@ -5,7 +5,7 @@ regression_lin_by_outcomes <- function(.data
                                        , .annotation
                                        , .cpus
                                        , .std_prd
-                                       , ...
+                                       , .summary
 ){
   
   # Processing on single CPU  
@@ -16,8 +16,10 @@ regression_lin_by_outcomes <- function(.data
                                 , .outcome = outcome
                                 , .predictors = .predictors
                                 , .covariates = .covariates
-                                , .annotation = .annotation,
-                                , .std_prd = .std_prd)
+                                , .annotation = .annotation
+                                , .std_prd = .std_prd
+                                , .summary = .summary
+                                )
     })
     fit_list
   
@@ -53,7 +55,8 @@ regression_lin_by_outcomes <- function(.data
                                                        , .covariates = .covariates
                                                        , .annotation = .annotation
                                                        , .std_prd = .std_prd
-                                )
+                                                       , .summary = .summary
+                                                       )
       return(fit_list_predictors)
     }
     stopCluster(cl = my_cluster)

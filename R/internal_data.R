@@ -22,13 +22,32 @@ internal_data <- function(size = 1
   covariates <<- names(d)[8]
 }
 
+internal_data()
+
+files <- list.files(
+  path = paste0(here::here(),
+                "/R"),
+  pattern = ".R")
+
+files <- setdiff(files, "internal_data.R")
+
+for (file in files) {
+  source(paste0(here::here(),
+      "/R/",
+      file))
+}  
+
+
 
 regression_lin(.data = as.data.frame(d)
                , .outcomes = outcomes
                , .predictors = predictors
                , .covariates = covariates
-               , .sort_by = "predictors"
+               , .annotation = annotation
+               , .subset = NULL
                , .cpus = 1
-               , .std_prd = TRUE
-               , .subset = "species != 'Adelie'")
+               #, .sort_by = "predictors"
+               , .std_prd = FALSE
+               , .summary = FALSE
+               )
 

@@ -1,5 +1,5 @@
 regression_lin <- function(.data
-                           , .outcomes
+                           , .outcomes = NULL
                            , .predictors = NULL
                            , .covariates = NULL
                            , .annotation = annotation
@@ -7,7 +7,7 @@ regression_lin <- function(.data
                            , .cpus = 1
                            , .sort_by = "outcomes"
                            , .std_prd = FALSE
-                           , ...
+                           , .summary = FALSE
   
 ){
   
@@ -28,9 +28,9 @@ regression_lin <- function(.data
                                       , .predictors = .predictors
                                       , .covariates = .covariates
                                       , .annotation = .annotation
-                                      , .parallel = .parallel
                                       , .cpus = .cpus
                                       , .std_prd = .std_prd
+                                      , .summary = .summary
                                       )
     )
     
@@ -41,9 +41,9 @@ regression_lin <- function(.data
                                         , .predictors = .predictors
                                         , .covariates = .covariates
                                         , .annotation = .annotation
-                                        , .parallel = .parallel
                                         , .cpus = .cpus
                                         , .std_prd = .std_prd
+                                        , .summary = .summary
                                         )
     )
   }

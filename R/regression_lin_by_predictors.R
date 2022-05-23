@@ -5,7 +5,7 @@ regression_lin_by_predictors <- function(.data
                                          , .annotation
                                          , .cpus
                                          , .std_prd
-                                         , ...
+                                         , .summary
 ){
   
   # Processing on single CPU  
@@ -17,7 +17,9 @@ regression_lin_by_predictors <- function(.data
                               , .predictor = predictor
                               , .covariates = .covariates
                               , .annotation = .annotation
-                              , .std_prd = .std_prd)
+                              , .std_prd = .std_prd
+                              , .summary = .summary
+                              )
     })
     fit_list
     
@@ -53,7 +55,8 @@ regression_lin_by_predictors <- function(.data
                                                    , .covariates = .covariates
                                                    , .annotation = .annotation
                                                    , .std_prd = .std_prd
-      )
+                                                   , .summary = .summary
+                                                   )
       
       return(fit_list_outcomes)
     }
