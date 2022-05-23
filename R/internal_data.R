@@ -1,25 +1,33 @@
 internal_data <- function(size = 1
 ) {
-  # Get iris dataset as d 
-  d <- iris
-  names(d) <- tolower(names(d))
-  
+  library(palmerpenguins)
+  # Get palmer penguins dataset as d 
   # Output the dataframe to the environment
-  d <<- d
+  d <<- penguins
   
   # Make an annotation file
   annotation <-
     data.frame(
       "name" = names(d),
       "pname" = toupper(names(d)),
-      "unit" = c(NA, NA, NA, NA, NA),
-      "short_pname" = c(NA, NA, NA, NA, NA),
-      "comment" = c(NA, NA, NA, NA, NA)
+      "unit" = c(rep(NA, length(names(d)))),
+      "short_pname" = c(rep(NA, length(names(d)))),
+      "comment" = c(rep(NA, length(names(d))))
     )
   rownames(annotation) <- annotation[[1]]
   annotation <<- annotation
   
-  outcomes <<- names(d)[4:5]
-  predictors <<- names(d)[1:2]
-  covariates <<- names(d)[3]
+  outcomes <<- names(d)[3:4]
+  predictors <<- names(d)[5:6]
+  covariates <<- names(d)[7]
 }
+
+
+regression_lin(.data = as.data.frame(d)
+               , .outcomes = outcomes
+               , .predictors = predictors
+              # , .covariates = covariates
+               , .sort_by = "predictors"
+               , .cpus = 2
+               , .std_prd = TRUE)
+

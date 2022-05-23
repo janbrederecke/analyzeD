@@ -1,13 +1,24 @@
 regression_lin_outcomes <- function(.data
                                     , .outcomes
                                     , .predictor
+                                    , .covariates
                                     , .annotation
                                     , .summary = FALSE
-                                    , .std.pred = FALSE
+                                    , .std_prd = FALSE
                                     , ...
 ){
-    fit_list <- list()
+    fit_list <- vector(mode = "list", length = length(.outcomes))
     .outcomes <- .outcomes[which(!.outcomes %in% .predictor)]
+    
+    if (.std_prd == TRUE) {
+        
+      name <- paste0("scale(", .predictor, ")")
+      pname <- paste0("std(", .annotation[.predictor, "pname"], ")")
+      .annotation <- rbind(.annotation, c(name, pname, "", "", ""))
+      
+      rownames(.annotation) <- .annotation[[1]]
+      .predictor <- paste0("scale(", .predictor, ")")
+    }
     
     for (i in seq_along(.outcomes)) {
       

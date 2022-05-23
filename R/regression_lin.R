@@ -6,6 +6,7 @@ regression_lin <- function(.data
                            , .subset = NULL
                            , .cpus = 1
                            , .sort_by = "outcomes"
+                           , .std_prd = FALSE
                            , ...
   
 ){
@@ -16,7 +17,7 @@ regression_lin <- function(.data
   }
   
   
-  if (!class(.data) %in% c("tbl_df", "data.frame", "mids")) {
+  if (!class(.data)[1] %in% c("tbl_df", "data.frame", "mids")) {
     
     stop("Your data must be either of class data.frame, tbl_df, or mids")
   
@@ -29,6 +30,7 @@ regression_lin <- function(.data
                                       , .annotation = .annotation
                                       , .parallel = .parallel
                                       , .cpus = .cpus
+                                      , .std_prd = .std_prd
                                       )
     )
     
@@ -41,6 +43,7 @@ regression_lin <- function(.data
                                         , .annotation = .annotation
                                         , .parallel = .parallel
                                         , .cpus = .cpus
+                                        , .std_prd = .std_prd
                                         )
     )
   }

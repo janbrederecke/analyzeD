@@ -4,13 +4,13 @@ regression_lin_predictors <- function(.data
                                       , .covariates
                                       , .annotation
                                       , .summary = FALSE
-                                      , .std.prd = FALSE
+                                      , .std_prd = FALSE
                                       , ...
 ){
-  fit_list <- list()
+  fit_list <- vector(mode = "list", length = length(.predictors))
   .predictors <- .predictors[which(!.predictors %in% .outcome)]
     
-  if (.std.prd == TRUE) {
+  if (.std_prd == TRUE) {
     
     for (i in seq_along(.predictors)) {
       

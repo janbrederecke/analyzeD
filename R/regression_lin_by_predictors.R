@@ -4,6 +4,7 @@ regression_lin_by_predictors <- function(.data
                                          , .covariates
                                          , .annotation
                                          , .cpus
+                                         , .std_prd
                                          , ...
 ){
   
@@ -15,7 +16,8 @@ regression_lin_by_predictors <- function(.data
                               , .outcomes = .outcomes
                               , .predictor = predictor
                               , .covariates = .covariates
-                              , .annotation = .annotation)
+                              , .annotation = .annotation
+                              , .std_prd = .std_prd)
     })
     
     names(fit_list) <- .annotation[.predictors, "pname"]
@@ -47,13 +49,15 @@ regression_lin_by_predictors <- function(.data
       predictor <- .predictors[i]
       
       ## Fit regression models for specified outcome
-      fit_list_outcomes <- regression_lin_outcomes(.data
-                                                   , .outcomes
+      fit_list_outcomes <- regression_lin_outcomes(.data = .data
+                                                   , .outcomes = .outcomes
                                                    , .predictor = predictor
-                                                   , .annotation
+                                                   , .covariates = .covariates
+                                                   , .annotation = .annotation
+                                                   , .std_prd = .std_prd
       )
       
-      names(fit_list_outcomes) <- i
+      names(fit_list_outcomes) <- .outcomes
       return(fit_list_outcomes)
     }
     stopCluster(cl = my_cluster)
