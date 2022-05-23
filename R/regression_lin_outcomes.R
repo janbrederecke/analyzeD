@@ -22,9 +22,18 @@ regression_lin_outcomes <- function(.data
     
     for (i in seq_along(.outcomes)) {
       
-      formula <- as.formula(paste0(paste(.outcomes[i]),
-                                   "~",
-                                   paste(.predictor, collapse = "+")))
+      if (!is.null(.covariates)) {
+        formula <- paste0(paste(.outcomes[i]),
+                                "~",
+                                paste(.predictor, collapse = "+"),
+                                "+",
+                                paste(.covariates, collapse = "+")
+                          )
+      } else {
+        formula <- paste0(paste(.outcomes[i]),
+                                "~",
+                                paste(.predictor, collapse = "+"))
+      }
       
       model <- lm(formula, data = .data, x = TRUE, ...)
 

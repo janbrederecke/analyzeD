@@ -19,15 +19,16 @@ internal_data <- function(size = 1
   
   outcomes <<- names(d)[3:4]
   predictors <<- names(d)[5:6]
-  covariates <<- names(d)[7]
+  covariates <<- names(d)[8]
 }
 
 
 regression_lin(.data = as.data.frame(d)
                , .outcomes = outcomes
                , .predictors = predictors
-              # , .covariates = covariates
+               , .covariates = covariates
                , .sort_by = "predictors"
-               , .cpus = 2
-               , .std_prd = TRUE)
+               , .cpus = 1
+               , .std_prd = TRUE
+               , .subset = "species != 'Adelie'")
 

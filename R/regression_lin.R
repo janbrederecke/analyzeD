@@ -11,9 +11,9 @@ regression_lin <- function(.data
   
 ){
   
+  # Subset data if .subset != NULL
   if (!is.null(.subset)) {
-    
-    .data <- .data[.subset,]
+    .data <- subset(.data, eval(parse(text = .subset)))
   }
   
   
