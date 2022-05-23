@@ -8,6 +8,8 @@ regression_lin <- function(.data
                            , .sort_by = "outcomes"
                            , .std_prd = FALSE
                            , .summary = FALSE
+                           , .interaction = NULL
+                           , ...
   
 ){
   
@@ -31,6 +33,8 @@ regression_lin <- function(.data
                                       , .cpus = .cpus
                                       , .std_prd = .std_prd
                                       , .summary = .summary
+                                      , .interaction = .interaction
+                                      , ...
                                       )
     )
     
@@ -44,6 +48,8 @@ regression_lin <- function(.data
                                         , .cpus = .cpus
                                         , .std_prd = .std_prd
                                         , .summary = .summary
+                                        , .interaction = .interaction
+                                        , ...
                                         )
     )
   }

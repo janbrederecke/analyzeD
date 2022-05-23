@@ -5,6 +5,8 @@ regression_lin_predictors <- function(.data
                                       , .annotation
                                       , .std_prd
                                       , .summary
+                                      , .interaction
+                                      , ...
 ){
   fit_list <- vector(mode = "list", length = length(.predictors))
   .predictors <- .predictors[which(!.predictors %in% .outcome)]
