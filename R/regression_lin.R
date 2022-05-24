@@ -1,3 +1,37 @@
+#' @title regression_lin
+#'
+#' @description Calculates linear regression models using lm(). Designed to make
+#' analysis with multiple predictors / outcomes easy.
+#'
+#' @param .data A data.frame
+#' @param .outcomes A vector containing the outcomes
+#' @param .predictors A vector containing the predictors
+#' @param .covariates A vector containing covariates for each regression
+#' @param .annotation A matrix or data.frame in the annotation format (name,
+#' pname, unit, short_pname, comment) that contains pretty names for the used
+#' variables and their dummy variables.
+#' @param .subset Can be used to internally subset the data. Use .subset =
+#' "variable == 'x'" to subset data.
+#' @param .cpus Input number of desired cpus to use. Useful only in case of big
+#' datasets and multiple analysis.
+#' @param .sort_by A character string that indicates either to sort the analyses
+#' by "outcomes" or by "predictors".
+#' @param .std_prd If TRUE, predictors are standardized using std(predictor).
+#' @param .summary If TRUE, an additional summary of all analyses is returned.
+#' @param .interaction Can be used to input interactions.
+#'
+#'
+#' @return A list containing individual results tables for each regression
+#' analysis.
+#' @examples -
+#' @export
+#' @importFrom foreach "foreach" "%dopar%"
+#' @importFrom parallel "makeCluster" "stopCluster"
+#' @importFrom doParallel "registerDoParallel"
+#' @importFrom broom "tidy" "glance"
+#' @importFrom dplyr "select"
+#' @importFrom stringr "str_remove"
+#' 
 regression_lin <- function(.data
                            , .outcomes = NULL
                            , .predictors = NULL

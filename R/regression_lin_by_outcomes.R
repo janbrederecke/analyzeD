@@ -31,19 +31,15 @@ regression_lin_by_outcomes <- function(.data
   } else if (.cpus >= 1) {
     
     print(paste0("Parallel processing. Using ", .cpus, " cores."))
-    # Register cluster
-    library(foreach)
-    library(doRNG)
-    library(parallel)
-    library(doParallel)
     
-    my_cluster <- makeCluster(.cpus)
-    registerDoParallel(cl = my_cluster)
+    # Register cluster
+    my_cluster <- parallel::makeCluster(.cpus)
+    doParallel::registerDoParallel(cl = my_cluster)
     
     n <- length(.outcomes)
     
     # Calculate regressions for each outcome on a single CPU
-    fit_list <- foreach(
+    fit_list <- foreach::foreach(
       i = 1:n,
       .packages = c("broom", "dplyr", "stringr"),
       .export = c("regression_lin_predictors")
@@ -65,7 +61,7 @@ regression_lin_by_outcomes <- function(.data
                                                        )
       return(fit_list_predictors)
     }
-    stopCluster(cl = my_cluster)
+    parallel::stopCluster(cl = my_cluster)
     fit_list
   }
   

@@ -45,8 +45,8 @@ regression_lin(.data = as.data.frame(d)
                , .covariates = covariates
                , .annotation = annotation
                , .subset = NULL
-               , .cpus = 1
-               , .sort_by = "predictors"
+               , .cpus = 2
+               , .sort_by = "outcomes"
                , .std_prd = FALSE
                , .summary = TRUE
                )
