@@ -20,9 +20,9 @@
 #' @param .summary If TRUE, an additional summary of all analyses is returned.
 #' @param .interaction Can be used to input interactions.
 #'
-#' @importFrom broom "tidy" "glance"
-#' @importFrom dplyr "select"
-#' @importFrom stringr "str_remove"
+#' @importFrom broom tidy glance
+#' @importFrom dplyr select
+#' @importFrom stringr str_remove
 #' 
 regression_lin_outcomes <- function(.data
                                     , .outcomes
