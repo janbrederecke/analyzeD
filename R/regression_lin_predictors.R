@@ -1,3 +1,29 @@
+#' @title regression_lin_predictors
+#'
+#' @description This function calculates the regressions while shuffeling
+#' through the input predictors
+#'
+#' @param .data A data.frame
+#' @param .outcome A vector containing the outcome
+#' @param .predictors A vector containing the predictors
+#' @param .covariates A vector containing covariates for each regression
+#' @param .annotation A matrix or data.frame in the annotation format (name,
+#' pname, unit, short_pname, comment) that contains pretty names for the used
+#' variables and their dummy variables.
+#' @param .subset Can be used to internally subset the data. Use .subset =
+#' "variable == 'x'" to subset data.
+#' @param .cpus Input number of desired cpus to use. Useful only in case of big
+#' datasets and multiple analysis.
+#' @param .sort_by A character string that indicates either to sort the analyses
+#' by "outcomes" or by "predictors".
+#' @param .std_prd If TRUE, predictors are standardized using std(predictor).
+#' @param .summary If TRUE, an additional summary of all analyses is returned.
+#' @param .interaction Can be used to input interactions.
+#'
+#' @importFrom broom "tidy" "glance"
+#' @importFrom dplyr "select"
+#' @importFrom stringr "str_remove"
+#' 
 regression_lin_predictors <- function(.data
                                       , .outcome
                                       , .predictors

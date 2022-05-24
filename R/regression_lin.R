@@ -25,12 +25,6 @@
 #' analysis.
 #' @examples -
 #' @export
-#' @importFrom foreach "foreach" "%dopar%"
-#' @importFrom parallel "makeCluster" "stopCluster"
-#' @importFrom doParallel "registerDoParallel"
-#' @importFrom broom "tidy" "glance"
-#' @importFrom dplyr "select"
-#' @importFrom stringr "str_remove"
 #' 
 regression_lin <- function(.data
                            , .outcomes = NULL

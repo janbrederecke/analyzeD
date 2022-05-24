@@ -11,7 +11,7 @@ Description: This package includes functions that were written to make data
              analysis quicker and easier.
              Functions are optimized for work with tidyverse functions.
 Depends: R (>= 3.6.0)
-Imports: tidyverse
+Imports: tidyverse, foreach, parallel, doParallel
 Suggests: knitr, kableExtra
 License: GPL-3
 Encoding: UTF-8
