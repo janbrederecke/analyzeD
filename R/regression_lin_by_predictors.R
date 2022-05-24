@@ -20,9 +20,7 @@
 #' @param .summary If TRUE, an additional summary of all analyses is returned.
 #' @param .interaction Can be used to input interactions.
 #'
-#' @importFrom foreach foreach "%dopar%"
-#' @importFrom parallel makeCluster stopCluster
-#' @importFrom doParallel registerDoParallel
+#' @importFrom foreach "%dopar%"
 #'
 regression_lin_by_predictors <- function(.data
                                          , .outcomes

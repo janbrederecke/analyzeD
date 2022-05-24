@@ -19,10 +19,6 @@
 #' @param .std_prd If TRUE, predictors are standardized using std(predictor).
 #' @param .summary If TRUE, an additional summary of all analyses is returned.
 #' @param .interaction Can be used to input interactions.
-#'
-#' @importFrom broom tidy glance
-#' @importFrom dplyr select
-#' @importFrom stringr str_remove
 #' 
 regression_lin_predictors <- function(.data
                                       , .outcome
