@@ -34,15 +34,6 @@ variables and their dummy variables.}
 \item{.summary}{If TRUE, an additional summary of all analyses is returned.}
 
 \item{.interaction}{Can be used to input interactions.}
-
-\item{.subset}{Can be used to internally subset the data. Use .subset =
-"variable == 'x'" to subset data.}
-
-\item{.cpus}{Input number of desired cpus to use. Useful only in case of big
-datasets and multiple analysis.}
-
-\item{.sort_by}{A character string that indicates either to sort the analyses
-by "outcomes" or by "predictors".}
 }
 \description{
 This function calculates the regressions while shuffeling
