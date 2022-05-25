@@ -42,10 +42,20 @@ regression_lin_predictors <- function(.data
   
   if (!is.null(.interaction)) {
     
-      name <- paste0(.interaction)
-      pname <- paste0(.interaction)
+    for (i in seq_along(.interaction)) {
+      vars <- unlist(stringr::str_split(string = .interaction[i],
+                                        pattern = "\\*",
+                                        n = 2))
+      vars <- stringr::str_remove_all(vars, " ")
+      
+      name <- paste0(vars[1], ":", vars[2])
+      pname <- paste0(.annotation[[2]][which(.annotation[[1]] %in%
+                                               vars[1])],
+                      ":",
+                      .annotation[[2]][which(.annotation[[1]] %in%
+                                               vars[2])])
       .annotation <- rbind(.annotation, c(name, pname, "", "", ""))
-
+    }
     rownames(.annotation) <- .annotation[[1]]
   }
     
@@ -69,7 +79,7 @@ regression_lin_predictors <- function(.data
               "+",
               paste(.covariates, collapse = "+"),
               "+",
-              paste(.interaction)
+              paste(.interaction, collapse = "+")
             )
             
           } else {
