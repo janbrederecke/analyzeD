@@ -10,12 +10,6 @@
 #' @param .annotation A matrix or data.frame in the annotation format (name,
 #' pname, unit, short_pname, comment) that contains pretty names for the used
 #' variables and their dummy variables.
-#' @param .subset Can be used to internally subset the data. Use .subset =
-#' "variable == 'x'" to subset data.
-#' @param .cpus Input number of desired cpus to use. Useful only in case of big
-#' datasets and multiple analysis.
-#' @param .sort_by A character string that indicates either to sort the analyses
-#' by "outcomes" or by "predictors".
 #' @param .std_prd If TRUE, predictors are standardized using std(predictor).
 #' @param .summary If TRUE, an additional summary of all analyses is returned.
 #' @param .interaction Can be used to input interactions.
@@ -44,7 +38,16 @@ regression_lin_predictors <- function(.data
       
       rownames(.annotation) <- .annotation[[1]]
       .predictors <- paste0("scale(", .predictors, ")")
-    }
+  }
+  
+  if (!is.null(.interaction)) {
+    
+      name <- paste0(.interaction)
+      pname <- paste0(.interaction)
+      .annotation <- rbind(.annotation, c(name, pname, "", "", ""))
+
+    rownames(.annotation) <- .annotation[[1]]
+  }
     
     for (i in seq_along(.predictors)) {
       
@@ -57,18 +60,34 @@ regression_lin_predictors <- function(.data
         
         if (!is.null(.covariates)) {
           
-          formula <- paste0(
-            paste(.outcome),
-            "~",
-            paste(.predictors[i], collapse = "+"),
-            "+",
-            paste(.covariates, collapse = "+")
-          )
+          if (!is.null(.interaction)) {
+            
+            formula <- paste0(
+              paste(.outcome),
+              "~",
+              paste(.predictors[i], collapse = "+"),
+              "+",
+              paste(.covariates, collapse = "+"),
+              "+",
+              paste(.interaction)
+            )
+            
+          } else {
+            
+            formula <- paste0(
+              paste(.outcome),
+              "~",
+              paste(.predictors[i], collapse = "+"),
+              "+",
+              paste(.covariates, collapse = "+")
+            )
+          }
           
         } else {
           
           formula <- paste0(paste(.outcome), "~",
-                            paste(.predictors[i]))
+                            paste(.predictors[i])
+                            )
         }
       }
       
