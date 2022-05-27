@@ -36,13 +36,14 @@ regression_lin_predictors <- function(.data
     
     for (i in seq_along(.predictors)) {
       
-      name <- paste0("scale(", .predictors[i], ")")
-      pname <- paste0("std(", .annotation[.predictors[i], "pname"], ")")
-      .annotation <- rbind(.annotation, c(name, pname, "", "", ""))
+      if (.predictors[i] != "base_model") {
+        name <- paste0("scale(", .predictors[i], ")")
+        pname <- paste0("std(", .annotation[.predictors[i], "pname"], ")")
+        .annotation <- rbind(.annotation, c(name, pname, "", "", ""))
+        .predictors[i] <- paste0("scale(", .predictors[i], ")")
       }
-      
+    }
       rownames(.annotation) <- .annotation[[1]]
-      .predictors <- paste0("scale(", .predictors, ")")
   }
   
   # Create annotation entries for interaction-terms, if .interaction != NULL
