@@ -10,8 +10,6 @@
 #' @param .annotation A matrix or data.frame in the annotation format (name,
 #' pname, unit, short_pname, comment) that contains pretty names for the used
 #' variables and their dummy variables.
-#' @param .subset Can be used to internally subset the data. Use .subset =
-#' "variable == 'x'" to subset data.
 #' @param .cpus Input number of desired cpus to use. Useful only in case of big
 #' datasets and multiple analysis.
 #' @param .sort_by A character string that indicates either to sort the analyses
@@ -34,7 +32,7 @@ regression_lin_by_outcomes <- function(.data
                                        , ...
 ){
   
-  # Processing on single CPU  
+  # Process on single CPU  
   if (.cpus == 1) {
   
     fit_list <- lapply(.outcomes, function(outcome) {
@@ -49,9 +47,11 @@ regression_lin_by_outcomes <- function(.data
                                 , ...
                                 )
     })
+    
+    # Return results
     fit_list
   
-  # Processing on multiple CPUS  
+  # Process in parallel on multiple CPUS  
   } else if (.cpus >= 1) {
     
     print(paste0("Parallel processing. Using ", .cpus, " cores."))
@@ -70,25 +70,36 @@ regression_lin_by_outcomes <- function(.data
       
     ) %dopar% {
       
+      ## Get one outcome to distribute to a core
       outcome <- .outcomes[i]
       
       ## Fit regression models for specified outcome
-      fit_list_predictors <- regression_lin_predictors(.data = .data
-                                                       , .outcome = outcome
-                                                       , .predictors = .predictors
-                                                       , .covariates = .covariates
-                                                       , .annotation = .annotation
-                                                       , .std_prd = .std_prd
-                                                       , .summary = .summary
-                                                       , .interaction = .interaction
-                                                       , ...
+      fit_list_predictors <- regression_lin_predictors(
+        .data = .data
+        , .outcome = outcome
+        , .predictors = .predictors
+        , .covariates = .covariates
+        , .annotation = .annotation
+        , .std_prd = .std_prd
+        , .summary = .summary
+        , .interaction = .interaction
+        , ...
                                                        )
+      
+      ## Return the list of results per outcome
       return(fit_list_predictors)
     }
+    
+    # Stop the cluster
     parallel::stopCluster(cl = my_cluster)
+    
+    # Return the list of lists
     fit_list
   }
   
+  # Name the list of lists using the respective outcomes
   names(fit_list) <- .outcomes
+  
+  # Return results
   fit_list
 }

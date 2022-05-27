@@ -39,9 +39,6 @@ datasets and multiple analysis.}
 
 \item{.interaction}{Can be used to input interactions.}
 
-\item{.subset}{Can be used to internally subset the data. Use .subset =
-"variable == 'x'" to subset data.}
-
 \item{.sort_by}{A character string that indicates either to sort the analyses
 by "outcomes" or by "predictors".}
 }

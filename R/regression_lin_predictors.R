@@ -24,10 +24,15 @@ regression_lin_predictors <- function(.data
                                       , .interaction
                                       , ...
 ){
+  
+  # Create output-list of length .predictors
   fit_list <- vector(mode = "list", length = length(.predictors))
+  
+  # In case the outcome is in .predictors, remove
   .predictors <- .predictors[which(!.predictors %in% .outcome)]
-    
-  if (.std_prd == TRUE) {
+  
+  # If wanted, standardize predictors  
+  if (.std_prd == TRUE && !is.null(.annotation)) {
     
     for (i in seq_along(.predictors)) {
       
@@ -40,9 +45,11 @@ regression_lin_predictors <- function(.data
       .predictors <- paste0("scale(", .predictors, ")")
   }
   
-  if (!is.null(.interaction)) {
+  # Create annotation entries for interaction-terms, if .interaction != NULL
+  if (!is.null(.interaction) && !is.null(.annotation)) {
     
     for (i in seq_along(.interaction)) {
+      
       vars <- unlist(stringr::str_split(string = .interaction[i],
                                         pattern = "\\*",
                                         n = 2))
@@ -58,97 +65,103 @@ regression_lin_predictors <- function(.data
     }
     rownames(.annotation) <- .annotation[[1]]
   }
-    
-    for (i in seq_along(.predictors)) {
+  
+  for (i in seq_along(.predictors)) {
       
-      if (.predictors[i] == "base_model") {
+    if (.predictors[i] == "base_model") {
         
-        formula <- paste0(paste(.outcome), "~", paste(.covariates,
+      formula <- paste0(paste(.outcome), "~", paste(.covariates,
                                                      collapse = "+"))
       
-      } else {
+    } else {
         
-        if (!is.null(.covariates)) {
+      if (!is.null(.covariates)) {
           
-          if (!is.null(.interaction)) {
+        if (!is.null(.interaction)) {
             
-            formula <- paste0(
-              paste(.outcome),
-              "~",
-              paste(.predictors[i], collapse = "+"),
-              "+",
-              paste(.covariates, collapse = "+"),
-              "+",
-              paste(.interaction, collapse = "+")
-            )
+          formula <- paste0(
+            paste(.outcome),
+            "~",
+            paste(.predictors[i], collapse = "+"),
+            "+",
+            paste(.covariates, collapse = "+"),
+            "+",
+            paste(.interaction, collapse = "+")
+          )
             
-          } else {
-            
-            formula <- paste0(
-              paste(.outcome),
-              "~",
-              paste(.predictors[i], collapse = "+"),
-              "+",
-              paste(.covariates, collapse = "+")
-            )
-          }
-          
         } else {
-          
-          formula <- paste0(paste(.outcome), "~",
-                            paste(.predictors[i])
-                            )
+            
+          formula <- paste0(
+            paste(.outcome),
+            "~",
+            paste(.predictors[i], collapse = "+"),
+            "+",
+            paste(.covariates, collapse = "+")
+          )
         }
+          
+      } else {
+          
+        formula <- paste0(paste(.outcome),
+                          "~",
+                          paste(.predictors[i])
+                          )
       }
+    }
       
-      model <- lm(formula, data = .data, x = TRUE)
-      tbl <- broom::tidy(model, conf.int = TRUE)
-      
+    model <- lm(formula, data = .data, x = TRUE)
+    tbl <- broom::tidy(model, conf.int = TRUE)
+    
+    #
+    if (!is.null(.annotation)) { 
       for (j in 2:nrow(tbl)) {
-        
+          
         tbl$term[j] <- .annotation[[2]][which(.annotation[[1]] %in%
-                                               tbl$term[j])]
+                                                 tbl$term[j])]
       }
-      
-      fit_list[[i]] <- dplyr::select(tbl, term, estimate, conf.low,
+    }
+    
+    fit_list[[i]] <- dplyr::select(tbl, term, estimate, conf.low,
                                      conf.high, p.value)
-      fit_list[[i]][ncol(fit_list[[i]]) + 1] <- NA
-      fit_list[[i]][nrow(fit_list[[i]]) + 1, 7] <-
-        broom::glance(model)$r.squared
-      fit_list[[i]][nrow(fit_list[[i]]), 1] <- "R<sup>2</sup>"
-      fit_list[[i]][nrow(fit_list[[i]]) + 1, 7] <-
-        broom::glance(model)$adj.r.squared
-      fit_list[[i]][nrow(fit_list[[i]]), 1] <-
-        "Adjusted R<sup>2</sup>"
-      fit_list[[i]][nrow(fit_list[[i]]) + 1, 1] <-
-        paste0("<i>N</i> used: ",
-               broom::glance(model)$nobs)
-      fit_list[[i]][6] <- ifelse(fit_list[[i]]$p.value < 0.05,
-                                 "&lt;.05*", "")
-      names(fit_list[[i]]) <- c(
-        "Term",
-        "Estimate",
-        "CI (low)",
-        "CI (high)",
-        "<i>p</i>-Value",
-        "Significance",
-        "R<sup>2</sup>"
-      )
+    fit_list[[i]][ncol(fit_list[[i]]) + 1] <- NA
+    fit_list[[i]][nrow(fit_list[[i]]) + 1, 7] <-
+      broom::glance(model)$r.squared
+    fit_list[[i]][nrow(fit_list[[i]]), 1] <- "R<sup>2</sup>"
+    fit_list[[i]][nrow(fit_list[[i]]) + 1, 7] <-
+      broom::glance(model)$adj.r.squared
+    fit_list[[i]][nrow(fit_list[[i]]), 1] <-
+      "Adjusted R<sup>2</sup>"
+    fit_list[[i]][nrow(fit_list[[i]]) + 1, 1] <-
+      paste0("<i>N</i> used: ", broom::glance(model)$nobs)
+    fit_list[[i]][6] <- ifelse(fit_list[[i]]$p.value < 0.05, "&lt;.05*", "")
+    names(fit_list[[i]]) <- c(
+      "Term",
+      "Estimate",
+      "CI (low)",
+      "CI (high)",
+      "<i>p</i>-Value",
+      "Significance",
+      "R<sup>2</sup>"
+    )
     }
   
-    names(fit_list) <- .predictors
+  names(fit_list) <- .predictors
     
-    if (.summary == TRUE) {
-      summary_table <- data.frame()
-      for (i in seq_along(fit_list)) {
-        summary_table <- rbind(summary_table, fit_list[[i]][2,])
-        summary_table[i, 7] <-
-          as.numeric(stringr::str_remove(fit_list[[i]][nrow(fit_list[[i]]),
-                                                       1], "<i>N</i> used: "))
-      }
-      names(summary_table)[7] <- "<i>N</i> used: "
-      fit_list[["summary"]] <- summary_table
+  if (.summary == TRUE) {
+    
+    summary_table <- data.frame()
+    
+    for (i in seq_along(fit_list)) {
+      
+      summary_table <- rbind(summary_table, fit_list[[i]][2,])
+      summary_table[i, 7] <-
+        as.numeric(stringr::str_remove(fit_list[[i]][nrow(fit_list[[i]]), 1],
+                                       "<i>N</i> used: "))
     }
-
-    fit_list
+    
+    names(summary_table)[7] <- "<i>N</i> used: "
+    fit_list[["summary"]] <- summary_table
   }
+
+  fit_list
+}
