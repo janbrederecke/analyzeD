@@ -10,8 +10,6 @@
 #' @param .annotation A matrix or data.frame in the annotation format (name,
 #' pname, unit, short_pname, comment) that contains pretty names for the used
 #' variables and their dummy variables.
-#' @param .subset Can be used to internally subset the data. Use .subset =
-#' "variable == 'x'" to subset data.
 #' @param .cpus Input number of desired cpus to use. Useful only in case of big
 #' datasets and multiple analysis.
 #' @param .sort_by A character string that indicates either to sort the analyses
@@ -83,17 +81,24 @@ regression_lin_by_predictors <- function(.data
                                                    , .interaction = .interaction
                                                    , ...
                                                    )
-      
+      ## Return the list of results per predictor
       return(fit_list_outcomes)
     }
+    
+    # Stop the cluster
     parallel::stopCluster(cl = my_cluster)
+    
+    # Return the list of lists
     fit_list
   }
+  
+  # Name the list of lists using the respective outcomes
   if (.std_prd == TRUE) {
     names(fit_list) <- paste0("std(", .predictors, ")")
   } else {
     names(fit_list) <-  .predictors
   }
-                            
+  
+  # Return results                          
   fit_list
 }
