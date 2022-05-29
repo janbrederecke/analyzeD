@@ -110,11 +110,19 @@ regression_lin_outcomes <- function(.data
     tbl <- broom::tidy(model, conf.int = TRUE)
     
     #
-    if (!is.null(.annotation)) {  
+    if (!is.null(.annotation)) {
+      pnames_outcomes <- vector(mode = "character", length = length(.outcomes))
+      
       for (j in 2:nrow(tbl)) {
         tbl$term[j] <- .annotation[[2]][which(.annotation[[1]] %in% tbl$term[j])]
         
       }
+      
+      for (k in seq_along(.outcomes)) {
+      pnames_outcomes[k] <- .annotation[[2]][which(.annotation[[1]] %in%
+                                                .outcomes[k])]
+      }
+      
     }  
     
     fit_list[[i]] <- dplyr::select(tbl,
@@ -132,7 +140,7 @@ regression_lin_outcomes <- function(.data
     fit_list[[i]][nrow(fit_list[[i]]) + 1, 1] <-
       paste0("<i>N</i> used: ", broom::glance(model)$nobs)
     fit_list[[i]][6] <- ifelse(fit_list[[i]]$p.value < .05, "&lt;.05*", "")
-    names(fit_list[[i]]) <- c("Term",
+    names(fit_list[[i]]) <- c("Predictor",
                               "Estimate",
                               "CI (low)",
                               "CI (high)",
@@ -157,6 +165,21 @@ regression_lin_outcomes <- function(.data
     }
       
     names(summary_table)[7] <- "<i>N</i> used: "
+    
+    if (!exists("pnames_outcomes")) {
+      
+      summary_table <- dplyr::mutate(summary_table,
+                                     Outcome = .outcomes,
+                                     .before = Predictor)
+      
+    } else {
+      
+      summary_table <- dplyr::mutate(summary_table,
+                                     Outcome = pnames_outcomes,
+                                     .before = Predictor)
+      
+    }
+    
     fit_list[["summary"]] <- summary_table
   }    
 
