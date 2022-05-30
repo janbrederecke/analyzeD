@@ -111,18 +111,11 @@ regression_lin_outcomes <- function(.data
     
     #
     if (!is.null(.annotation)) {
-      pnames_outcomes <- vector(mode = "character", length = length(.outcomes))
       
       for (j in 2:nrow(tbl)) {
         tbl$term[j] <- .annotation[[2]][which(.annotation[[1]] %in% tbl$term[j])]
         
       }
-      
-      for (k in seq_along(.outcomes)) {
-      pnames_outcomes[k] <- .annotation[[2]][which(.annotation[[1]] %in%
-                                                .outcomes[k])]
-      }
-      
     }  
     
     fit_list[[i]] <- dplyr::select(tbl,
@@ -153,34 +146,12 @@ regression_lin_outcomes <- function(.data
   names(fit_list) <- .outcomes
     
   if (.summary == TRUE) {
-      
-    summary_table <- data.frame()
-      
-    for (i in seq_along(fit_list)) {
-        
-      summary_table <- rbind(summary_table, fit_list[[i]][2,])
-      summary_table[i, 7] <-
-        as.numeric(stringr::str_remove(fit_list[[i]][nrow(fit_list[[i]]),
-                                                       1], "<i>N</i> used: "))
-    }
-      
-    names(summary_table)[7] <- "<i>N</i> used: "
     
-    if (!exists("pnames_outcomes")) {
-      
-      summary_table <- dplyr::mutate(summary_table,
-                                     Outcome = .outcomes,
-                                     .before = Predictor)
-      
-    } else {
-      
-      summary_table <- dplyr::mutate(summary_table,
-                                     Outcome = pnames_outcomes,
-                                     .before = Predictor)
-      
-    }
-    
-    fit_list[["summary"]] <- summary_table
+    fit_list[["summary"]] <-
+      regression_lin_outcomes_summary(.fit_list = fit_list
+                                      , .outcomes = .outcomes
+                                      , .annotation = .annotation
+                                     )
   }    
 
   fit_list
