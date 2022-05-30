@@ -77,7 +77,7 @@ regression_lin_outcomes <- function(.data
         if (!is.null(.interaction)) {
           
           formula <- paste0(
-            paste(.outcome[i]),
+            paste(.outcomes[i]),
             "~",
             paste(.predictor),
             "+",

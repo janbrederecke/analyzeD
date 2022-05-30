@@ -10,11 +10,11 @@ regression_lin_outcomes_summary <- function(.fit_list
   
   summary_table <- data.frame()
 
-  for (i in seq_along(fit_list)) {
+  for (i in seq_along(.fit_list)) {
     
-    summary_table <- rbind(summary_table, fit_list[[i]][2,])
+    summary_table <- rbind(summary_table, .fit_list[[i]][2,])
     summary_table[i, 7] <-
-      as.numeric(stringr::str_remove(fit_list[[i]][nrow(fit_list[[i]]),
+      as.numeric(stringr::str_remove(.fit_list[[i]][nrow(.fit_list[[i]]),
                                                    1], "<i>N</i> used: "))
   }
   
