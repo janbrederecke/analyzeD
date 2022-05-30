@@ -2,10 +2,12 @@ regression_lin_outcomes_summary <- function(.fit_list
                                             , .outcomes
                                             , .annotation
 ){
-  pnames_outcomes <- vector(mode = "character", length = length(.outcomes))
-  for (i in seq_along(.outcomes)) {
-    pnames_outcomes[i] <- .annotation[[2]][which(.annotation[[1]] %in%
-                                                   .outcomes[i])]
+  if (!is.null(.annotation)) {
+    pnames_outcomes <- vector(mode = "character", length = length(.outcomes))
+    for (i in seq_along(.outcomes)) {
+      pnames_outcomes[i] <- .annotation[[2]][which(.annotation[[1]] %in%
+                                                     .outcomes[i])]
+    }
   }
   
   summary_table <- data.frame()
