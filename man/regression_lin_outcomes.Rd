@@ -17,13 +17,13 @@ regression_lin_outcomes(
 )
 }
 \arguments{
-\item{.data}{A data.frame}
+\item{.data}{A data.frame.}
 
-\item{.outcomes}{A vector containing the outcomes}
+\item{.outcomes}{A vector containing the outcomes.}
 
-\item{.predictor}{A vector containing the predictor}
+\item{.predictor}{A vector containing the predictor.}
 
-\item{.covariates}{A vector containing covariates for each regression}
+\item{.covariates}{A vector containing covariates for each regression.}
 
 \item{.annotation}{A matrix or data.frame in the annotation format (name,
 pname, unit, short_pname, comment) that contains pretty names for the used
@@ -37,5 +37,5 @@ variables and their dummy variables.}
 }
 \description{
 This function calculates the regressions while shuffeling
-through the input outcomes
+through the input outcomes.
 }

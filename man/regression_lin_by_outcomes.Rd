@@ -18,13 +18,13 @@ regression_lin_by_outcomes(
 )
 }
 \arguments{
-\item{.data}{A data.frame}
+\item{.data}{A data.frame.}
 
-\item{.outcomes}{A vector containing the outcomes}
+\item{.outcomes}{A vector containing the outcomes.}
 
-\item{.predictors}{A vector containing the predictors}
+\item{.predictors}{A vector containing the predictors.}
 
-\item{.covariates}{A vector containing covariates for each regression}
+\item{.covariates}{A vector containing covariates for each regression.}
 
 \item{.annotation}{A matrix or data.frame in the annotation format (name,
 pname, unit, short_pname, comment) that contains pretty names for the used
@@ -44,5 +44,5 @@ by "outcomes" or by "predictors".}
 }
 \description{
 This function calls the actual regression_lin_predictors
-function that shuffles through the predictors
+function that shuffles through the predictors.
 }
