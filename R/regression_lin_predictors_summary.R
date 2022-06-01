@@ -7,12 +7,20 @@ regression_lin_predictors_summary <- function(.fit_list
     pname_outcome <- .annotation[[2]][which(.annotation[[1]] %in%
                                               .outcome)]
   }
-  
-  summary_table <- data.frame()
+
+  summary_table <- .fit_list[[1]][FALSE,]
   
   for (i in seq_along(.fit_list)) {
     
-    summary_table <- rbind(summary_table, .fit_list[[i]][2,])
+    if (names(.fit_list)[i] == "base_model") {
+      
+      summary_table[(nrow(summary_table) + 1), 1] <- "Base model"
+      
+    } else {
+      
+      summary_table <- dplyr::bind_rows(summary_table, .fit_list[[i]][2,])
+    }
+    
     summary_table[i, 7] <-
       as.numeric(stringr::str_remove(.fit_list[[i]][nrow(.fit_list[[i]]), 1],
                                      "<i>N</i> used: "))
