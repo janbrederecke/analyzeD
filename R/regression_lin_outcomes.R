@@ -1,12 +1,12 @@
 #' @title regression_lin_outcomes
 #'
 #' @description This function calculates the regressions while shuffeling
-#' through the input outcomes
+#' through the input outcomes.
 #'
-#' @param .data A data.frame
-#' @param .outcomes A vector containing the outcomes
-#' @param .predictor A vector containing the predictor
-#' @param .covariates A vector containing covariates for each regression
+#' @param .data A data.frame.
+#' @param .outcomes A vector containing the outcomes.
+#' @param .predictor A vector containing the predictor.
+#' @param .covariates A vector containing covariates for each regression.
 #' @param .annotation A matrix or data.frame in the annotation format (name,
 #' pname, unit, short_pname, comment) that contains pretty names for the used
 #' variables and their dummy variables.

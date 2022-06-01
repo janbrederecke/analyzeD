@@ -1,12 +1,12 @@
 #' @title regression_lin_by_predictors
 #'
 #' @description This function calls the actual regression_lin_outcomes
-#' function that shuffles through the outcomes
+#' function that shuffles through the outcomes.
 #'
-#' @param .data A data.frame
-#' @param .outcomes A vector containing the outcomes
-#' @param .predictors A vector containing the predictors
-#' @param .covariates A vector containing covariates for each regression
+#' @param .data A data.frame.
+#' @param .outcomes A vector containing the outcomes.
+#' @param .predictors A vector containing the predictors.
+#' @param .covariates A vector containing covariates for each regression.
 #' @param .annotation A matrix or data.frame in the annotation format (name,
 #' pname, unit, short_pname, comment) that contains pretty names for the used
 #' variables and their dummy variables.

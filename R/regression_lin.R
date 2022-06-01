@@ -3,10 +3,10 @@
 #' @description Calculates linear regression models using lm(). Designed to make
 #' analysis with multiple predictors / outcomes easy.
 #'
-#' @param .data A data.frame
-#' @param .outcomes A vector containing the outcomes
-#' @param .predictors A vector containing the predictors
-#' @param .covariates A vector containing covariates for each regression
+#' @param .data A data.frame.
+#' @param .outcomes A vector containing the outcomes.
+#' @param .predictors A vector containing the predictors.
+#' @param .covariates A vector containing covariates for each regression.
 #' @param .annotation A matrix or data.frame in the annotation format (name,
 #' pname, unit, short_pname, comment) that contains pretty names for the used
 #' variables and their dummy variables.
@@ -95,7 +95,6 @@ regression_lin <- function(.data
     .data <- subset(.data, eval(parse(text = .subset)))
   }
   
-
   if (class(.data)[1] %in% c("tbl_df", "data.frame") && .sort_by == "outcomes") {
   
     return(regression_lin_by_outcomes(.data = .data
