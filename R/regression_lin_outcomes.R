@@ -150,6 +150,7 @@ regression_lin_outcomes <- function(.data
     fit_list[["summary"]] <-
       regression_lin_outcomes_summary(.fit_list = fit_list
                                       , .outcomes = .outcomes
+                                      , .predictor = .predictor
                                       , .annotation = .annotation
                                      )
   }    

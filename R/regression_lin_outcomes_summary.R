@@ -1,7 +1,9 @@
 regression_lin_outcomes_summary <- function(.fit_list
                                             , .outcomes
+                                            , .predictor
                                             , .annotation
 ){
+  
   if (!is.null(.annotation)) {
     pnames_outcomes <- vector(mode = "character", length = length(.outcomes))
     for (i in seq_along(.outcomes)) {
@@ -14,7 +16,7 @@ regression_lin_outcomes_summary <- function(.fit_list
 
   for (i in seq_along(.fit_list)) {
     
-    if (names(.fit_list)[i] == "base_model") {
+    if (.predictor == "base_model") {
       
       summary_table[(nrow(summary_table) + 1), 1] <- "Base model"
       
@@ -45,5 +47,4 @@ regression_lin_outcomes_summary <- function(.fit_list
   }
   
   summary_table
-  
 }
