@@ -13,7 +13,7 @@ Description: This package includes functions that were written to make data
 Depends: R (>= 3.6.0)
 Imports: tidyverse, foreach, parallel, doParallel
 Suggests: knitr, kableExtra
-License: GPL-3
+License: MIT
 Encoding: UTF-8
 Language: en-US
 LazyData: true
