@@ -13,6 +13,7 @@
 #' @param .std_prd If TRUE, predictors are standardized using std(predictor).
 #' @param .summary If TRUE, an additional summary of all analyses is returned.
 #' @param .interaction Can be used to input interactions.
+#' @param ... Optional input passed to the regression function.
 #' 
 regression_lin_predictors <- function(.data
                                       , .outcome
@@ -110,7 +111,7 @@ regression_lin_predictors <- function(.data
       }
     }
       
-    model <- lm(formula, data = .data, x = TRUE)
+    model <- stats::lm(formula, data = .data, x = TRUE)
     tbl <- broom::tidy(model, conf.int = TRUE)
     
     #

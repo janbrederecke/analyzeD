@@ -34,6 +34,8 @@ variables and their dummy variables.}
 \item{.summary}{If TRUE, an additional summary of all analyses is returned.}
 
 \item{.interaction}{Can be used to input interactions.}
+
+\item{...}{Optional input passed to the regression function.}
 }
 \description{
 This function calculates the regressions while shuffeling

@@ -9,7 +9,7 @@ regression_lin(
   .outcomes = NULL,
   .predictors = NULL,
   .covariates = NULL,
-  .annotation = annotation,
+  .annotation = NULL,
   .subset = NULL,
   .cpus = 1,
   .sort_by = "outcomes",
@@ -46,6 +46,8 @@ by "outcomes" or by "predictors".}
 \item{.summary}{If TRUE, an additional summary of all analyses is returned.}
 
 \item{.interaction}{Can be used to input interactions.}
+
+\item{...}{Optional input passed to the regression function.}
 }
 \value{
 A list containing individual results tables for each regression

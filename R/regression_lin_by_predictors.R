@@ -12,11 +12,10 @@
 #' variables and their dummy variables.
 #' @param .cpus Input number of desired cpus to use. Useful only in case of big
 #' datasets and multiple analysis.
-#' @param .sort_by A character string that indicates either to sort the analyses
-#' by "outcomes" or by "predictors".
 #' @param .std_prd If TRUE, predictors are standardized using std(predictor).
 #' @param .summary If TRUE, an additional summary of all analyses is returned.
 #' @param .interaction Can be used to input interactions.
+#' @param ... Optional input passed to the regression function.
 #'
 #' @importFrom foreach "%dopar%"
 #'

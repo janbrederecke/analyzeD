@@ -39,8 +39,7 @@ datasets and multiple analysis.}
 
 \item{.interaction}{Can be used to input interactions.}
 
-\item{.sort_by}{A character string that indicates either to sort the analyses
-by "outcomes" or by "predictors".}
+\item{...}{Optional input passed to the regression function.}
 }
 \description{
 This function calls the actual regression_lin_outcomes

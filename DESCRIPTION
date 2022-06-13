@@ -11,11 +11,11 @@ Description: This package includes functions that were written to make data
              analysis quicker and easier.
              Functions are optimized for work with tidyverse functions.
 Depends: R (>= 3.6.0)
-Imports: tidyverse, foreach, parallel, doParallel
+Imports: broom, dplyr, stringr, foreach, parallel, doParallel
 Suggests: knitr, kableExtra
-License: MIT
+License: MIT + file LICENSE
 Encoding: UTF-8
 Language: en-US
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1
+RoxygenNote: 7.2.0

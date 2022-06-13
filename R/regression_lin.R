@@ -19,6 +19,7 @@
 #' @param .std_prd If TRUE, predictors are standardized using std(predictor).
 #' @param .summary If TRUE, an additional summary of all analyses is returned.
 #' @param .interaction Can be used to input interactions.
+#' @param ... Optional input passed to the regression function.
 #'
 #'
 #' @return A list containing individual results tables for each regression
@@ -30,7 +31,7 @@ regression_lin <- function(.data
                            , .outcomes = NULL
                            , .predictors = NULL
                            , .covariates = NULL
-                           , .annotation = annotation
+                           , .annotation = NULL
                            , .subset = NULL
                            , .cpus = 1
                            , .sort_by = "outcomes"
