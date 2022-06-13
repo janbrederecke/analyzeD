@@ -21,7 +21,7 @@
 #'
 reg_lin_sort_by_predictors <- function(.data
                                          , .outcomes
-                                         , .predictors 
+                                         , .predictors
                                          , .covariates
                                          , .annotation
                                          , .cpus
@@ -30,10 +30,10 @@ reg_lin_sort_by_predictors <- function(.data
                                          , .interaction
                                          , ...
 ){
-  
-  # Processing on single CPU  
+
+  # Processing on single CPU
   if (.cpus == 1) {
-    
+
     fit_list <- lapply(.predictors, function(predictor) {
       reg_lin_outcomes(.data = .data
                               , .outcomes = .outcomes
@@ -47,34 +47,35 @@ reg_lin_sort_by_predictors <- function(.data
                               )
     })
     fit_list
-    
-    # Processing on multiple CPUS  
+
+    # Processing on multiple CPUS
   } else if (.cpus >= 1) {
-    
+
     print(paste0("Parallel processing. Using ", .cpus, " cores."))
-    
+
     # Register cluster
     my_cluster <- parallel::makeCluster(.cpus)
 
-    ## Export summary function because the foreach export did not work properly 
+    ## Export summary function because the foreach export did not work properly
     parallel::clusterExport(cl = my_cluster,
                             varlist = c("reg_lin_outcomes_summary"))
 
-    ## Actual registering of cluster                        
+    ## Actual registering of cluster
     doParallel::registerDoParallel(cl = my_cluster)
 
     n <- length(.predictors)
-    
+
     # Calculate regressions for each outcome on a single CPU
     fit_list <- foreach::foreach(
       i = 1:n,
       .packages = c("broom", "dplyr", "stringr", "tidyselect"),
-      .export = c("reg_lin_outcomes")
-      
+      .export = c("reg_lin_outcomes",
+                  "reg_lin_outcomes_summary")
+
     ) %dopar% {
-      
+
       predictor <- .predictors[i]
-      
+
       ## Fit regression models for specified outcome
       fit_list_outcomes <- reg_lin_outcomes(.data = .data
                                                    , .outcomes = .outcomes
@@ -89,21 +90,21 @@ reg_lin_sort_by_predictors <- function(.data
       ## Return the list of results per predictor
       return(fit_list_outcomes)
     }
-    
+
     # Stop the cluster
     parallel::stopCluster(cl = my_cluster)
-    
+
     # Return the list of lists
     fit_list
   }
-  
+
   # Name the list of lists using the respective outcomes
   if (.std_prd == TRUE) {
     names(fit_list) <- paste0("std(", .predictors, ")")
   } else {
     names(fit_list) <-  .predictors
   }
-  
-  # Return results                          
+
+  # Return results
   fit_list
 }
