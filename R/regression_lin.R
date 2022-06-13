@@ -99,7 +99,7 @@ regression_lin <- function(.data
   
   if (class(.data)[1] %in% c("tbl_df", "data.frame") && .sort_by == "outcomes") {
   
-    return(regression_lin_by_outcomes(.data = .data
+    return(reg_lin_sort_by_outcomes(.data = .data
                                       , .outcomes = .outcomes
                                       , .predictors = .predictors
                                       , .covariates = .covariates
@@ -114,7 +114,7 @@ regression_lin <- function(.data
     
   }  else if (class(.data)[1] %in% c("tbl_df", "data.frame") && .sort_by == "predictors") {
     
-    return(regression_lin_by_predictors(.data = .data
+    return(reg_lin_sort_by_predictors(.data = .data
                                         , .outcomes = .outcomes
                                         , .predictors = .predictors
                                         , .covariates = .covariates
@@ -128,3 +128,6 @@ regression_lin <- function(.data
     )
   }
 }
+
+# Exposing 'i' to global environment
+globalVariables(c("i"))

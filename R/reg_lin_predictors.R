@@ -1,4 +1,4 @@
-#' @title regression_lin_predictors
+#' @title reg_lin_predictors
 #'
 #' @description This function calculates the regressions while shuffeling
 #' through the input predictors.
@@ -15,7 +15,7 @@
 #' @param .interaction Can be used to input interactions.
 #' @param ... Optional input passed to the regression function.
 #' 
-regression_lin_predictors <- function(.data
+reg_lin_predictors <- function(.data
                                       , .outcome
                                       , .predictors
                                       , .covariates
@@ -161,7 +161,7 @@ regression_lin_predictors <- function(.data
   if (.summary == TRUE) {
     
     fit_list[["summary"]] <-
-      regression_lin_predictors_summary(.fit_list = fit_list
+      reg_lin_predictors_summary(.fit_list = fit_list
                                         , .outcome = .outcome
                                         , .annotation = .annotation
                                        )

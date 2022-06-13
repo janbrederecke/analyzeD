@@ -1,6 +1,6 @@
-#' @title regression_lin_by_predictors
+#' @title reg_lin_sort_by_predictors
 #'
-#' @description This function calls the actual regression_lin_outcomes
+#' @description This function calls the actual reg_lin_outcomes
 #' function that shuffles through the outcomes.
 #'
 #' @param .data A data.frame.
@@ -19,7 +19,7 @@
 #'
 #' @importFrom foreach "%dopar%"
 #'
-regression_lin_by_predictors <- function(.data
+reg_lin_sort_by_predictors <- function(.data
                                          , .outcomes
                                          , .predictors 
                                          , .covariates
@@ -35,7 +35,7 @@ regression_lin_by_predictors <- function(.data
   if (.cpus == 1) {
     
     fit_list <- lapply(.predictors, function(predictor) {
-      regression_lin_outcomes(.data = .data
+      reg_lin_outcomes(.data = .data
                               , .outcomes = .outcomes
                               , .predictor = predictor
                               , .covariates = .covariates
@@ -58,7 +58,7 @@ regression_lin_by_predictors <- function(.data
 
     ## Export summary function because the foreach export did not work properly 
     parallel::clusterExport(cl = my_cluster,
-                            varlist = c("regression_lin_outcomes_summary"))
+                            varlist = c("reg_lin_outcomes_summary"))
 
     ## Actual registering of cluster                        
     doParallel::registerDoParallel(cl = my_cluster)
@@ -69,15 +69,15 @@ regression_lin_by_predictors <- function(.data
     fit_list <- foreach::foreach(
       i = 1:n,
       .packages = c("broom", "dplyr", "stringr", "tidyselect"),
-      .export = c("regression_lin_outcomes",
-                  "regression_lin_outcomes_summary")
+      .export = c("reg_lin_outcomes",
+                  "reg_lin_outcomes_summary")
       
     ) %dopar% {
       
       predictor <- .predictors[i]
       
       ## Fit regression models for specified outcome
-      fit_list_outcomes <- regression_lin_outcomes(.data = .data
+      fit_list_outcomes <- reg_lin_outcomes(.data = .data
                                                    , .outcomes = .outcomes
                                                    , .predictor = predictor
                                                    , .covariates = .covariates
