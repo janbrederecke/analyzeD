@@ -6,7 +6,7 @@ internal_data <- function(size = 1
   .data <- as.data.frame(penguins)
   .data$year2 <- .data$year * sample(1:100, nrow(.data), replace = T)
   .data$year3 <- .data$year2 * sample(1:100, nrow(.data), replace = T)
-  
+
   .data <<- .data
   # Make an annotation file
   .annotation <-
@@ -29,14 +29,14 @@ internal_data <- function(size = 1
   .interaction <<- c("year * year2", "year2 * year3")
 }
 
-internal_data() 
+internal_data()
 regression_lin(
   .data = .data
 , .outcomes = .outcomes
 , .predictors = .predictors
 , .covariates = .covariates
 , .annotation = .annotation
-, .sort_by = "predictors"
-, .cpus = 1
+, .sort_by = "outcomes"
+, .cpus = 2
 , .summary = TRUE
 , .std_prd = TRUE)
