@@ -8,13 +8,13 @@
 #' @param .annotation A matrix or data.frame in the annotation format (name,
 #' pname, unit, short_pname, comment) that contains pretty names for the used
 #' variables and their dummy variables.
-#' 
+#'
 reg_lin_outcomes_summary <- function(.fit_list
-                                            , .outcomes
-                                            , .predictor
-                                            , .annotation
+                                     , .outcomes
+                                     , .predictor
+                                     , .annotation
 ){
-  
+
   if (!is.null(.annotation)) {
     pnames_outcomes <- vector(mode = "character", length = length(.outcomes))
     for (i in seq_along(.outcomes)) {
@@ -22,40 +22,38 @@ reg_lin_outcomes_summary <- function(.fit_list
                                                      .outcomes[i])]
     }
   }
-  
-  summary_table <- .fit_list[[1]][FALSE,]
+
+  summary_table <- .fit_list[[1]][FALSE, ]
 
   for (i in seq_along(.fit_list)) {
-    
+
     if (.predictor == "base_model") {
-      
+
       summary_table[(nrow(summary_table) + 1), 1] <- "Base model"
-      
+
     } else {
-      
-      summary_table <- dplyr::bind_rows(summary_table, .fit_list[[i]][2,])
+
+      summary_table <- dplyr::bind_rows(summary_table, .fit_list[[i]][2, ])
     }
-    
-    summary_table[i, 7] <-
-      as.numeric(stringr::str_remove(.fit_list[[i]][nrow(.fit_list[[i]]), 1],
-                                     "<i>N</i> used: "))
+
+    summary_table[i, 7] <- .fit_list[[i]][nrow(.fit_list[[i]]), 7]
   }
-  
-  names(summary_table)[7] <- "<i>N</i> used: "
-  
+
+  names(summary_table)[7] <- "nobs"
+
   if (!exists("pnames_outcomes")) {
-    
+
     summary_table <- dplyr::mutate(summary_table,
                                    Outcome = .outcomes,
-                                   .before = tidyselect::all_of("Predictor"))
-    
+                                   .before = tidyselect::all_of("term"))
+
   } else {
-    
+
     summary_table <- dplyr::mutate(summary_table,
                                    Outcome = pnames_outcomes,
-                                   .before = tidyselect::all_of("Predictor"))
-    
+                                   .before = tidyselect::all_of("term"))
+
   }
-  
+
   summary_table
 }

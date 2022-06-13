@@ -28,3 +28,15 @@ internal_data <- function(size = 1
   .summary <<- FALSE
   .interaction <<- c("year * year2", "year2 * year3")
 }
+
+internal_data() 
+regression_lin(
+  .data = .data
+, .outcomes = .outcomes
+, .predictors = .predictors
+, .covariates = .covariates
+, .annotation = .annotation
+, .sort_by = "predictors"
+, .cpus = 1
+, .summary = TRUE
+, .std_prd = TRUE)
