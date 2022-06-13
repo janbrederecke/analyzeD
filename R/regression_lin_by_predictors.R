@@ -55,14 +55,20 @@ regression_lin_by_predictors <- function(.data
     
     # Register cluster
     my_cluster <- parallel::makeCluster(.cpus)
+
+    ## Export summary function because the foreach export did not work properly 
+    parallel::clusterExport(cl = my_cluster,
+                            varlist = c("regression_lin_outcomes_summary"))
+
+    ## Actual registering of cluster                        
     doParallel::registerDoParallel(cl = my_cluster)
-    
+
     n <- length(.predictors)
     
     # Calculate regressions for each outcome on a single CPU
     fit_list <- foreach::foreach(
       i = 1:n,
-      .packages = c("broom", "dplyr", "stringr"),
+      .packages = c("broom", "dplyr", "stringr", "tidyselect"),
       .export = c("regression_lin_outcomes",
                   "regression_lin_outcomes_summary")
       

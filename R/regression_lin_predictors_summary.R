@@ -7,7 +7,6 @@
 #' @param .annotation A matrix or data.frame in the annotation format (name,
 #' pname, unit, short_pname, comment) that contains pretty names for the used
 #' variables and their dummy variables.
-#' @export
 #' 
 regression_lin_predictors_summary <- function(.fit_list
                                               , .outcome
