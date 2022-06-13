@@ -6,9 +6,9 @@
 \usage{
 reg_lin_predictors(
   .data,
-  .outcome,
   .predictors,
   .covariates,
+  .outcome,
   .annotation,
   .std_prd,
   .summary,
@@ -19,11 +19,11 @@ reg_lin_predictors(
 \arguments{
 \item{.data}{A data.frame.}
 
-\item{.outcome}{A vector containing the outcome.}
-
 \item{.predictors}{A vector containing the predictors.}
 
 \item{.covariates}{A vector containing covariates for each regression.}
+
+\item{.outcome}{A vector containing the outcome.}
 
 \item{.annotation}{A matrix or data.frame in the annotation format (name,
 pname, unit, short_pname, comment) that contains pretty names for the used
