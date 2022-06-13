@@ -63,7 +63,8 @@ regression_lin_by_predictors <- function(.data
     fit_list <- foreach::foreach(
       i = 1:n,
       .packages = c("broom", "dplyr", "stringr"),
-      .export = c("regression_lin_outcomes")
+      .export = c("regression_lin_outcomes",
+                  "regression_lin_outcomes_summary")
       
     ) %dopar% {
       

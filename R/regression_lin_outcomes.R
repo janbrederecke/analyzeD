@@ -35,7 +35,7 @@ regression_lin_outcomes <- function(.data
   # If wanted, standardize predictor
   if (.std_prd == TRUE && !is.null(.annotation)) {
       
-    if (.predictors[i] != "base_model") {  
+    if (.predictor != "base_model") {  
       name <- paste0("scale(", .predictor, ")")
       pname <- paste0("std(", .annotation[.predictor, "pname"], ")")
       .annotation <- rbind(.annotation, c(name, pname, "", "", ""))
@@ -119,12 +119,12 @@ regression_lin_outcomes <- function(.data
       }
     }  
     
-    fit_list[[i]] <- dplyr::select(tbl,
-                                   term,
-                                   estimate,
-                                   conf.low,
-                                   conf.high,
-                                   p.value)
+    fit_list[[i]] <- dplyr::select(tbl, tidyselect::all_of(c("term",
+                                   "estimate",
+                                   "conf.low",
+                                   "conf.high",
+                                   "p.value"))
+                                   )
     fit_list[[i]][ncol(fit_list[[i]]) + 1] <- NA
     fit_list[[i]][nrow(fit_list[[i]]) + 1, 7] <- broom::glance(model)$r.squared
     fit_list[[i]][nrow(fit_list[[i]]), 1] <- "R<sup>2</sup>"

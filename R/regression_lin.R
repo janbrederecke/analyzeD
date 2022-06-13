@@ -81,11 +81,12 @@ regression_lin <- function(.data
     
     stop("Annotation has to be provided as a matrix or data.frame")
     
-  } else if (!is.null(.annotation) && names(.annotation) != c("name",
-                                                              "pname",
-                                                              "unit",
-                                                              "short_pname",
-                                                              "comment")) {
+  } else if (!is.null(.annotation) && !identical(names(.annotation),
+                                                c("name",
+                                                  "pname",
+                                                  "unit",
+                                                  "short_pname",
+                                                  "comment"))) {
     
     stop("Names of the annotation have to be name, pname, unit, short_pname, and
          comment")

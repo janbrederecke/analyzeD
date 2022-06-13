@@ -1,3 +1,14 @@
+#' @title regression_lin_outcomes_summary
+#'
+#' @description This function produces summary tables.
+#'
+#' @param .fit_list The list of fits produced beforehand.
+#' @param .outcomes A vector containing the outcomes.
+#' @param .predictor A vector containing the predictor.
+#' @param .annotation A matrix or data.frame in the annotation format (name,
+#' pname, unit, short_pname, comment) that contains pretty names for the used
+#' variables and their dummy variables.
+#' 
 regression_lin_outcomes_summary <- function(.fit_list
                                             , .outcomes
                                             , .predictor
@@ -36,13 +47,13 @@ regression_lin_outcomes_summary <- function(.fit_list
     
     summary_table <- dplyr::mutate(summary_table,
                                    Outcome = .outcomes,
-                                   .before = Predictor)
+                                   .before = tidyselect::all_of("Predictor"))
     
   } else {
     
     summary_table <- dplyr::mutate(summary_table,
                                    Outcome = pnames_outcomes,
-                                   .before = Predictor)
+                                   .before = tidyselect::all_of("Predictor"))
     
   }
   

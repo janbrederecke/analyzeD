@@ -127,12 +127,13 @@ regression_lin_predictors <- function(.data
 
     }
     
-    fit_list[[i]] <- dplyr::select(tbl,
-                                   term,
-                                   estimate,
-                                   conf.low,
-                                   conf.high,
-                                   p.value)
+    fit_list[[i]] <- dplyr::select(tbl, tidyselect::all_of(c(
+                                                            "term",
+                                                            "estimate",
+                                                            "conf.low",
+                                                            "conf.high",
+                                                            "p.value"))
+    )
     fit_list[[i]][ncol(fit_list[[i]]) + 1] <- NA
     fit_list[[i]][nrow(fit_list[[i]]) + 1, 7] <-
       broom::glance(model)$r.squared
