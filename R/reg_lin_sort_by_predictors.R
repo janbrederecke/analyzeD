@@ -69,8 +69,7 @@ reg_lin_sort_by_predictors <- function(.data
     fit_list <- foreach::foreach(
       i = 1:n,
       .packages = c("broom", "dplyr", "stringr", "tidyselect"),
-      .export = c("reg_lin_outcomes",
-                  "reg_lin_outcomes_summary")
+      .export = c("reg_lin_outcomes")
       
     ) %dopar% {
       
