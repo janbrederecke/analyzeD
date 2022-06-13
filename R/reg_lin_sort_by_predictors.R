@@ -58,7 +58,8 @@ reg_lin_sort_by_predictors <- function(.data
 
     ## Export summary function because the foreach export did not work properly
     parallel::clusterExport(cl = my_cluster,
-                            varlist = c("reg_lin_outcomes_summary"))
+                            varlist = c("reg_lin_outcomes_summary"),
+                            envir = environment())
 
     ## Actual registering of cluster
     doParallel::registerDoParallel(cl = my_cluster)
