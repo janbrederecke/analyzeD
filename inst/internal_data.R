@@ -40,6 +40,6 @@ regression_lin(
 , .covariates = .covariates
 , .annotation = .annotation
 , .sort_by = "outcomes"
-, .cpus = 2
-, .summary = TRUE
-, .std_prd = TRUE)
+, .cpus = 1
+, .summary = FALSE
+, .std_prd = FALSE)

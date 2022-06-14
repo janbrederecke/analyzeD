@@ -34,27 +34,20 @@ reg_lin_sort_by_outcomes <- function(.data
   # Process on single CPU
   if (.cpus == 1) {
 
-    # Call the reg_lin_predictors function if .data is a data.frame
-    if (is.data.frame(.data)) {
+    # Call the reg_lin_predictors function
 
-      fit_list <- lapply(.outcomes, function(outcome) {
-        reg_lin_predictors(.data = .data
-                                  , .outcome = outcome
-                                  , .predictors = .predictors
-                                  , .covariates = .covariates
-                                  , .annotation = .annotation
-                                  , .std_prd = .std_prd
-                                  , .summary = .summary
-                                  , .interaction = .interaction
-                                  , ...
-                          )
-      })
-
-    # Call the reg_lin_predictors_mice function if .data is a mids object
-    } else if (mice::is.mids(.data)) {
-
-    stop("you wnt to call the reg_lin_predictors_mids function")
-    }
+    fit_list <- lapply(.outcomes, function(outcome) {
+      reg_lin_predictors(.data = .data
+                                , .outcome = outcome
+                                , .predictors = .predictors
+                                , .covariates = .covariates
+                                , .annotation = .annotation
+                                , .std_prd = .std_prd
+                                , .summary = .summary
+                                , .interaction = .interaction
+                                , ...
+                        )
+    })
 
   # Process in parallel on multiple CPUS
   } else if (.cpus > 1) {
@@ -78,40 +71,34 @@ reg_lin_sort_by_outcomes <- function(.data
     # Calculate regressions for each outcome on a single CPU
 
     # Call the reg_lin_predictors function if .data is a data.frame
-    if (is.data.frame(.data)) {
 
-      fit_list <- foreach::foreach(
-        i = 1:n,
-        .packages = c("broom", "dplyr", "stringr", "tidyselect"),
-        .export = c("reg_lin_predictors",
-                    "reg_lin_predictors_summary"
-                  )
+    fit_list <- foreach::foreach(
+      i = 1:n,
+      .packages = c("broom", "dplyr", "stringr", "tidyselect"),
+      .export = c("reg_lin_predictors",
+                  "reg_lin_predictors_summary"
+                )
 
-      ) %dopar% {
+    ) %dopar% {
 
-        ## Get one outcome to distribute to a core
-        outcome <- .outcomes[i]
+      ## Get one outcome to distribute to a core
+      outcome <- .outcomes[i]
 
-        ## Fit regression models for specified outcome
-        fit_list_predictors <- reg_lin_predictors(
-          .data = .data
-          , .outcome = outcome
-          , .predictors = .predictors
-          , .covariates = .covariates
-          , .annotation = .annotation
-          , .std_prd = .std_prd
-          , .summary = .summary
-          , .interaction = .interaction
-          , ...
-        )
+      ## Fit regression models for specified outcome
+      fit_list_predictors <- reg_lin_predictors(
+        .data = .data
+        , .outcome = outcome
+        , .predictors = .predictors
+        , .covariates = .covariates
+        , .annotation = .annotation
+        , .std_prd = .std_prd
+        , .summary = .summary
+        , .interaction = .interaction
+        , ...
+      )
 
-        ## Return the list of results per outcome
-        return(fit_list_predictors)
-      }
-
-    # Call the reg_lin_predictors_mids function if .data is a mids object
-    } else if (mice::is.mids(.data)) {
-      stop("you wnt to call the reg_lin_predictors_mids function")
+      ## Return the list of results per outcome
+      return(fit_list_predictors)
     }
 
     # Stop the cluster
@@ -123,5 +110,4 @@ reg_lin_sort_by_outcomes <- function(.data
 
   # Return results
   fit_list
-
 }
