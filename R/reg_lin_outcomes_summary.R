@@ -50,7 +50,7 @@ reg_lin_outcomes_summary <- function(.fit_list
   } else {
 
     summary_table <- dplyr::mutate(summary_table,
-                                   Outcome = pnames_outcomes,
+                                   outcome = pnames_outcomes,
                                    .before = tidyselect::all_of("term"))
 
   }

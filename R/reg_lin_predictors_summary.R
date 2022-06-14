@@ -46,7 +46,7 @@ reg_lin_predictors_summary <- function(.fit_list
   } else {
 
     summary_table <- dplyr::mutate(summary_table,
-                                   Outcome = rep(pname_outcome,
+                                   outcome = rep(pname_outcome,
                                                  nrow(summary_table)),
                                    .before = tidyselect::all_of("term"))
   }
