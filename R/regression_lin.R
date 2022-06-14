@@ -26,7 +26,7 @@
 #' analysis.
 #' @examples -
 #' @export
-#' 
+#'
 regression_lin <- function(.data
                            , .outcomes = NULL
                            , .predictors = NULL
@@ -39,66 +39,66 @@ regression_lin <- function(.data
                            , .summary = FALSE
                            , .interaction = NULL
                            , ...
-  
+
 ){
-  
+
   # Check if .data is in one of the supported formats
-  if (!class(.data)[1] %in% c("tbl_df", "data.frame", "mids")) {
-    
-    stop("Your data must be either of class data.frame, tbl_df, or mids")
-    
+  if (!is.data.frame(.data) && !mice::is.mids(.data)) {
+
+    stop("Your data must be either a data.frame or mids object.")
+
   }
-  
+
   # Check if .outcomes has been specified and is in the right format
   if (is.null(.outcomes)) {
-    
+
     stop("You have to specify outcomes!")
-    
+
   } else if (!is.null(.outcomes) && class(.outcomes) != "character") {
-    
+
     stop("Outcomes have to be provided in a vector of type 'character'.")
   }
-  
+
   # Check if .predictors has been specified and is in the right format
   if (is.null(.predictors)) {
-    
+
     stop("You have to specify predictors!")
-    
+
   } else if (!is.null(.predictors) && class(.predictors) != "character") {
-    
+
     stop("Predictors have to be provided in a vector of type 'character'.")
   }
-  
+
   # Check if .covariates has been specified and is in the right format
   if (!is.null(.covariates) && class(.covariates) != "character") {
-    
+
     stop("Covariates have to be provided in a vector of type 'character'.")
   }
-  
+
   # Check if .annotation has been specified and is in the right format
   if (!is.null(.annotation) && !class(.annotation) %in% c("matrix",
                                                           "data.frame")) {
-    
+
     stop("Annotation has to be provided as a matrix or data.frame")
-    
+
   } else if (!is.null(.annotation) && !identical(names(.annotation),
                                                 c("name",
                                                   "pname",
                                                   "unit",
                                                   "short_pname",
                                                   "comment"))) {
-    
+
     stop("Names of the annotation have to be name, pname, unit, short_pname, and
          comment")
   }
-  
+
   # Subset data if .subset != NULL
   if (!is.null(.subset)) {
     .data <- subset(.data, eval(parse(text = .subset)))
   }
-  
-  if (class(.data)[1] %in% c("tbl_df", "data.frame") && .sort_by == "outcomes") {
-  
+
+  if (.sort_by == "outcomes") {
+
     return(reg_lin_sort_by_outcomes(.data = .data
                                       , .outcomes = .outcomes
                                       , .predictors = .predictors
@@ -111,9 +111,9 @@ regression_lin <- function(.data
                                       , ...
                                       )
     )
-    
-  }  else if (class(.data)[1] %in% c("tbl_df", "data.frame") && .sort_by == "predictors") {
-    
+
+  }  else if (.sort_by == "predictors") {
+
     return(reg_lin_sort_by_predictors(.data = .data
                                         , .outcomes = .outcomes
                                         , .predictors = .predictors

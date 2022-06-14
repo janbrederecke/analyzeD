@@ -20,38 +20,44 @@
 #' @importFrom foreach "%dopar%"
 #'
 reg_lin_sort_by_outcomes <- function(.data
-                                       , .outcomes
-                                       , .predictors
-                                       , .covariates
-                                       , .annotation
-                                       , .cpus
-                                       , .std_prd
-                                       , .summary
-                                       , .interaction
-                                       , ...
+                                     , .outcomes
+                                     , .predictors
+                                     , .covariates
+                                     , .annotation
+                                     , .cpus
+                                     , .std_prd
+                                     , .summary
+                                     , .interaction
+                                     , ...
 ){
 
   # Process on single CPU
   if (.cpus == 1) {
 
-    fit_list <- lapply(.outcomes, function(outcome) {
-      reg_lin_predictors(.data = .data
-                                , .outcome = outcome
-                                , .predictors = .predictors
-                                , .covariates = .covariates
-                                , .annotation = .annotation
-                                , .std_prd = .std_prd
-                                , .summary = .summary
-                                , .interaction = .interaction
-                                , ...
-                                )
-    })
+    # Call the reg_lin_predictors function if .data is a data.frame
+    if (is.data.frame(.data)) {
 
-    # Return results
-    fit_list
+      fit_list <- lapply(.outcomes, function(outcome) {
+        reg_lin_predictors(.data = .data
+                                  , .outcome = outcome
+                                  , .predictors = .predictors
+                                  , .covariates = .covariates
+                                  , .annotation = .annotation
+                                  , .std_prd = .std_prd
+                                  , .summary = .summary
+                                  , .interaction = .interaction
+                                  , ...
+                          )
+      })
+
+    # Call the reg_lin_predictors_mice function if .data is a mids object
+    } else if (mice::is.mids(.data)) {
+
+    print("you wnt to call the reg_lin_predictors_mids function")
+    }
 
   # Process in parallel on multiple CPUS
-  } else if (.cpus >= 1) {
+  } else if (.cpus > 1) {
 
     print(paste0("Parallel processing. Using ", .cpus, " cores."))
 
@@ -61,7 +67,8 @@ reg_lin_sort_by_outcomes <- function(.data
     ## Export summary function because the foreach export did not work properly
     parallel::clusterExport(cl = my_cluster,
                             varlist = c("reg_lin_predictors_summary"),
-                            envir = environment())
+                            envir = environment()
+                          )
 
     ## Actual registering of cluster
     doParallel::registerDoParallel(cl = my_cluster)
@@ -69,39 +76,46 @@ reg_lin_sort_by_outcomes <- function(.data
     n <- length(.outcomes)
 
     # Calculate regressions for each outcome on a single CPU
-    fit_list <- foreach::foreach(
-      i = 1:n,
-      .packages = c("broom", "dplyr", "stringr", "tidyselect"),
-      .export = c("reg_lin_predictors",
-                  "reg_lin_predictors_summary")
 
-    ) %dopar% {
+    # Call the reg_lin_predictors function if .data is a data.frame
+    if (is.data.frame(.data)) {
 
-      ## Get one outcome to distribute to a core
-      outcome <- .outcomes[i]
+      fit_list <- foreach::foreach(
+        i = 1:n,
+        .packages = c("broom", "dplyr", "stringr", "tidyselect"),
+        .export = c("reg_lin_predictors",
+                    "reg_lin_predictors_summary"
+                  )
 
-      ## Fit regression models for specified outcome
-      fit_list_predictors <- reg_lin_predictors(
-        .data = .data
-        , .outcome = outcome
-        , .predictors = .predictors
-        , .covariates = .covariates
-        , .annotation = .annotation
-        , .std_prd = .std_prd
-        , .summary = .summary
-        , .interaction = .interaction
-        , ...
-                                                       )
+      ) %dopar% {
 
-      ## Return the list of results per outcome
-      return(fit_list_predictors)
+        ## Get one outcome to distribute to a core
+        outcome <- .outcomes[i]
+
+        ## Fit regression models for specified outcome
+        fit_list_predictors <- reg_lin_predictors(
+          .data = .data
+          , .outcome = outcome
+          , .predictors = .predictors
+          , .covariates = .covariates
+          , .annotation = .annotation
+          , .std_prd = .std_prd
+          , .summary = .summary
+          , .interaction = .interaction
+          , ...
+        )
+
+        ## Return the list of results per outcome
+        return(fit_list_predictors)
+      }
+
+    # Call the reg_lin_predictors_mids function if .data is a mids object
+    } else if (mice::is.mids(.data)) {
+      print("you wnt to call the reg_lin_predictors_mids function")
     }
 
     # Stop the cluster
     parallel::stopCluster(cl = my_cluster)
-
-    # Return the list of lists
-    fit_list
   }
 
   # Name the list of lists using the respective outcomes
@@ -109,4 +123,5 @@ reg_lin_sort_by_outcomes <- function(.data
 
   # Return results
   fit_list
+
 }
