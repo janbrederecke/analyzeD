@@ -34,7 +34,7 @@ internal_data <- function(size = 1
 
 internal_data()
 regression_lin(
-  .data = .data
+  .data = .imp_data
 , .outcomes = .outcomes
 , .predictors = .predictors
 , .covariates = .covariates

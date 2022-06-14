@@ -14,12 +14,21 @@ reg_lin_predictors_summary <- function(.fit_list
 ){
   if (!is.null(.annotation)) {
     pname_outcome <- vector(mode = "character", length = 1)
-    pname_outcome <- .annotation[[2]][which(.annotation[[1]] %in%
+    pname_outcome <- .annotation[["pname"]][which(.annotation[["name"]] %in%
                                               .outcome)]
   }
 
+  # Check if AIC should be included (only complete case analyses)
+  if ("AIC" %in% .fit_list[[1]][["term"]]) {
+    aic_col <- TRUE
+  } else {
+    aic_col <- FALSE
+  }
+
+  # Create empty summary table with names of the .fit_list columns
   summary_table <- .fit_list[[1]][FALSE,]
 
+  # Create rows of the summary table
   for (i in seq_along(.fit_list)) {
 
     if (names(.fit_list)[i] == "base_model") {
@@ -28,13 +37,27 @@ reg_lin_predictors_summary <- function(.fit_list
 
     } else {
 
-      summary_table <- dplyr::bind_rows(summary_table, .fit_list[[i]][2,])
+      summary_table <- dplyr::bind_rows(summary_table, .fit_list[[i]][2, ])
     }
 
-    summary_table[i, 7] <- .fit_list[[i]][nrow(.fit_list[[i]]), 7]
+    summary_table[i, 7] <-
+      .fit_list[[i]][[7]][which(.fit_list[[i]][["term"]] == "r.squared")]
+    summary_table[i, 8] <-
+      .fit_list[[i]][[7]][which(.fit_list[[i]][["term"]] == "adj.r.squared")]
+    summary_table[i, 9] <-
+      .fit_list[[i]][[7]][which(.fit_list[[i]][["term"]] == "nobs")]
+    if (aic_col == TRUE) {
+      summary_table[i, 10] <-
+        .fit_list[[i]][[7]][which(.fit_list[[i]][["term"]] == "AIC")]
+    }
   }
 
-  names(summary_table)[7] <- "nobs"
+  names(summary_table)[7] <- "r.squared"
+  names(summary_table)[8] <- "adj.r.squared"
+  names(summary_table)[9] <- "nobs"
+  if (aic_col == TRUE) {
+    names(summary_table)[10] <- "AIC"
+  }
 
   if (!exists("pname_outcome")) {
 

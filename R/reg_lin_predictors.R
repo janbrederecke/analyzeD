@@ -116,15 +116,17 @@ reg_lin_predictors <- function(.data
                           ", x = TRUE))"
       )
       eval(parse(text = text2eval))
-      model_tidy <- broom::tidy(mice::pool(model), conf.int = TRUE)
-      model_glance <- broom::glance(mice::pool(model))
+      model_tidy <- tibble::as_tibble(broom::tidy(mice::pool(model),
+                                                  conf.int = TRUE))
+      model_glance <- tibble::as_tibble(broom::glance(mice::pool(model),))
     }
 
     # Add pretty names to the table if annotation is available
     if (!is.null(.annotation)) {
       for (j in 2:nrow(model_tidy)) {
-        model_tidy$term[j] <- .annotation[[2]][which(.annotation[[1]] %in%
-                                              model_tidy$term[j])]
+        model_tidy$term[j] <-
+          .annotation[["pname"]][which(.annotation[["name"]] %in%
+                                      model_tidy$term[j])]
       }
     }
     fit_list[[i]] <- dplyr::select(model_tidy, tidyselect::all_of(c(
@@ -149,6 +151,10 @@ reg_lin_predictors <- function(.data
     fit_list[[i]][nrow(fit_list[[i]]), 1] <- "adj.r.squared"
     fit_list[[i]][nrow(fit_list[[i]]) + 1, 1] <- "nobs"
     fit_list[[i]][nrow(fit_list[[i]]), 7] <- model_glance$nobs
+    if (is.data.frame(.data)) {
+      fit_list[[i]][nrow(fit_list[[i]]) + 1, 1] <- "AIC"
+      fit_list[[i]][nrow(fit_list[[i]]), 7] <- model_glance$AIC
+    }
     fit_list[[i]][6] <- ifelse(fit_list[[i]]$p.value < .05, "*", NA_character_)
     names(fit_list[[i]])[6] <- "significance"
     }

@@ -75,6 +75,7 @@ regression_lin <- function(.data
              !all(c("name", "pname") %in% names(.annotation))) {
     stop("The annotation has to include the columns 'name' and 'pname'.")
   }
+  rownames(.annotation) <- .annotation$name
 
   # Subset data if .subset != NULL
   if (!is.null(.subset) && is.data.frame(.data)) {
