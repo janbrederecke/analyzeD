@@ -11,7 +11,8 @@ Description: This package includes functions that were written to make data
              analysis quicker and easier.
              Functions are optimized for work with tidyverse functions.
 Depends: R (>= 3.6.0)
-Imports: broom, dplyr, stringr, tidyselect, foreach, parallel, doParallel, mice
+Imports: broom, dplyr, stringr, tidyselect, foreach, parallel, doParallel, mice,
+         tibble
 Suggests: knitr, kableExtra
 License: MIT + file LICENSE
 Encoding: UTF-8

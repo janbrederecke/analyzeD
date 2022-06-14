@@ -20,7 +20,7 @@ regression_lin(
 )
 }
 \arguments{
-\item{.data}{A data.frame.}
+\item{.data}{A data.frame or .mids object.}
 
 \item{.outcomes}{A vector containing the outcomes.}
 
