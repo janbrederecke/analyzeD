@@ -29,8 +29,7 @@ reg_lin_predictors <- function(.data
   if (is.data.frame(.data)) {
     .data <- dplyr::filter(.data, !is.na(tidyselect::all_of(.outcome)))
   } else if (mice::is.mids(.data)) {
-    #.data <- mice::filter(.data, !is.na(.data[[.outcome]]))
-    print("!")
+    .data <- mice::filter(.data, !is.na(.data[[.outcome]]))
   }
 
   # Create output-list of length .predictors
@@ -116,7 +115,7 @@ reg_lin_predictors <- function(.data
                           formula,
                           ", x = TRUE))"
       )
-      eval(parse(text = text2eval), envir = .GlobalEnv)
+      eval(parse(text = text2eval))
       model_tidy <- broom::tidy(mice::pool(model), conf.int = TRUE)
       model_glance <- broom::glance(mice::pool(model))
     }

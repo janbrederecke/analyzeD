@@ -3,7 +3,7 @@
 #' @description Calculates linear regression models using lm(). Designed to make
 #' analysis with multiple predictors / outcomes easy.
 #'
-#' @param .data A data.frame.
+#' @param .data A data.frame or .mids object.
 #' @param .outcomes A vector containing the outcomes.
 #' @param .predictors A vector containing the predictors.
 #' @param .covariates A vector containing covariates for each regression.
@@ -67,17 +67,13 @@ regression_lin <- function(.data
   }
 
   # Check if .annotation has been specified and is in the right format
-  if (!is.null(.annotation) && !class(.annotation) %in% c("matrix",
-                                                          "data.frame")) {
+  if (!is.null(.annotation) && is.matrix(.annotation)) {
+    .annotation <- as.data.frame(.annotation)
+  } else if (!is.null(.annotation) && !is.data.frame(.annotation)) {
     stop("Annotation has to be provided as a matrix or data.frame")
-  } else if (!is.null(.annotation) && !identical(names(.annotation),
-                                                c("name",
-                                                  "pname",
-                                                  "unit",
-                                                  "short_pname",
-                                                  "comment"))) {
-    stop("Names of the annotation have to be name, pname, unit, short_pname, and
-         comment.")
+  } else if (!is.null(.annotation) &&
+             !all(c("name", "pname") %in% names(.annotation))) {
+    stop("The annotation has to include the columns 'name' and 'pname'.")
   }
 
   # Subset data if .subset != NULL

@@ -70,8 +70,6 @@ reg_lin_sort_by_outcomes <- function(.data
 
     # Calculate regressions for each outcome on a single CPU
 
-    # Call the reg_lin_predictors function if .data is a data.frame
-
     fit_list <- foreach::foreach(
       i = 1:n,
       .packages = c("broom", "dplyr", "stringr", "tidyselect"),

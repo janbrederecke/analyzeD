@@ -34,12 +34,13 @@ internal_data <- function(size = 1
 
 internal_data()
 regression_lin(
-  .data = .imp_data
+  .data = .data
 , .outcomes = .outcomes
 , .predictors = .predictors
 , .covariates = .covariates
 , .annotation = .annotation
 , .sort_by = "outcomes"
 , .cpus = 1
-, .summary = FALSE
-, .std_prd = FALSE)
+, .summary = TRUE
+, .std_prd = TRUE
+, .interaction = "year * year2")
