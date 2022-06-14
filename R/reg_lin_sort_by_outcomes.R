@@ -53,7 +53,7 @@ reg_lin_sort_by_outcomes <- function(.data
     # Call the reg_lin_predictors_mice function if .data is a mids object
     } else if (mice::is.mids(.data)) {
 
-    print("you wnt to call the reg_lin_predictors_mids function")
+    stop("you wnt to call the reg_lin_predictors_mids function")
     }
 
   # Process in parallel on multiple CPUS
@@ -111,7 +111,7 @@ reg_lin_sort_by_outcomes <- function(.data
 
     # Call the reg_lin_predictors_mids function if .data is a mids object
     } else if (mice::is.mids(.data)) {
-      print("you wnt to call the reg_lin_predictors_mids function")
+      stop("you wnt to call the reg_lin_predictors_mids function")
     }
 
     # Stop the cluster
