@@ -38,6 +38,7 @@ internal_data <- function(size = 1
 }
 
 internal_data()
+
 regression_lin(
   .data = .data
 , .outcomes = .outcomes
@@ -49,6 +50,33 @@ regression_lin(
 , .summary = TRUE
 , .std_prd = TRUE
 , .std_cov = c("year",  "year3")
+, .interaction = list(c("year", "year2"),
+                  c("year2", "year3")
+                 )
+)
+
+print("------------")
+print("------------")
+print("------------")
+print("------------")
+print("------------")
+print("------------")
+print("------------")
+print("------------")
+print("------------")
+print("------------")
+
+regression_lin(
+  .data = .imp_data
+, .outcomes = .outcomes
+, .predictors = .predictors
+, .covariates = .covariates
+, .annotation = NULL
+, .sort_by = "outcomes"
+, .cpus = 1
+, .summary = TRUE
+, .std_prd = TRUE
+, .std_cov = NULL
 , .interaction = list(c("year", "year2"),
                   c("year2", "year3")
                  )

@@ -18,30 +18,30 @@ reg_lin_predictors(
 )
 }
 \arguments{
-\item{.data}{A data.frame.}
+\item{.data}{A data.frame or .mids object.}
 
-\item{.predictors}{A vector containing the predictors.}
+\item{.predictors}{A character vector containing the predictors.}
 
-\item{.covariates}{A vector containing covariates for each regression.}
+\item{.covariates}{A character vector containing covariates.}
 
-\item{.outcome}{A vector containing the outcome.}
+\item{.annotation}{A matrix or data.frame of format (name, pname, unit,
+short_pname, comment) that contains pretty names for the used variables.}
 
-\item{.annotation}{A matrix or data.frame in the annotation format (name,
-pname, unit, short_pname, comment) that contains pretty names for the used
-variables and their dummy variables.}
+\item{.std_prd}{If TRUE, predictors are standardized.}
 
-\item{.std_prd}{If TRUE, predictors are standardized using std(predictor).}
-
-\item{.std_cov}{Input vector of covariates that are standardized using
-std(covariate).}
+\item{.std_cov}{Character vector of covariates that should be standardized.}
 
 \item{.summary}{If TRUE, an additional summary of all analyses is returned.}
 
-\item{.interaction}{Can be used to input interactions.}
+\item{.interaction}{Can be used to specify interactions using a list of
+character vectors containing the interaction variables, e.g.
+list(c("variable1", "variable2"), c("variable2", "variable3")).}
 
-\item{...}{Optional input passed to the regression function.}
+\item{...}{Optional input passed directly to the regression function.}
+
+\item{.outcomes}{A character vector containing the outcomes.}
 }
 \description{
 This function calculates the regressions while shuffeling
-through the input predictors.
+through the provided predictors.
 }
