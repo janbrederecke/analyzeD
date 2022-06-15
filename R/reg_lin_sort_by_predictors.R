@@ -45,6 +45,7 @@ reg_lin_sort_by_predictors <- function(.data
                               , .covariates = .covariates
                               , .annotation = .annotation
                               , .std_prd = .std_prd
+                              , .std_cov = .std_cov
                               , .summary = .summary
                               , .interaction = .interaction
                               , ...
