@@ -39,13 +39,13 @@ internal_data <- function(size = 1
 
 internal_data()
 regression_lin(
-  .data = .imp_data
+  .data = .data
 , .outcomes = .outcomes
 , .predictors = .predictors
 , .covariates = .covariates
 , .annotation = .annotation
 , .sort_by = "predictors"
-, .cpus = 1
+, .cpus = 2
 , .summary = TRUE
 , .std_prd = TRUE
 , .std_cov = c("year",  "year3")
