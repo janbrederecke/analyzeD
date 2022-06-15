@@ -12,6 +12,7 @@ reg_lin_sort_by_outcomes(
   .annotation,
   .cpus,
   .std_prd,
+  .std_cov,
   .summary,
   .interaction,
   ...
@@ -34,6 +35,9 @@ variables and their dummy variables.}
 datasets and multiple analysis.}
 
 \item{.std_prd}{If TRUE, predictors are standardized using std(predictor).}
+
+\item{.std_cov}{Input vector of covariates that are standardized using
+std(covariate).}
 
 \item{.summary}{If TRUE, an additional summary of all analyses is returned.}
 

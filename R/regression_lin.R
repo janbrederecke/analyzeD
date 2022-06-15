@@ -17,8 +17,11 @@
 #' @param .sort_by A character string that indicates either to sort the analyses
 #' by "outcomes" or by "predictors".
 #' @param .std_prd If TRUE, predictors are standardized using std(predictor).
+#' @param .std_cov Input vector of covariates that are standardized using
+#' std(covariate).
 #' @param .summary If TRUE, an additional summary of all analyses is returned.
-#' @param .interaction Can be used to input interactions.
+#' @param .interaction Can be used to input interactions using the format
+#' c("variable1 * variable2", "variable2 * variable3").
 #' @param ... Optional input passed to the regression function.
 #'
 #'
@@ -36,6 +39,7 @@ regression_lin <- function(.data
                            , .cpus = 1
                            , .sort_by = "outcomes"
                            , .std_prd = FALSE
+                           , .std_cov = NULL
                            , .summary = FALSE
                            , .interaction = NULL
                            , ...
@@ -93,6 +97,7 @@ regression_lin <- function(.data
                                       , .annotation = .annotation
                                       , .cpus = .cpus
                                       , .std_prd = .std_prd
+                                      , .std_cov = .std_cov
                                       , .summary = .summary
                                       , .interaction = .interaction
                                       , ...
@@ -106,6 +111,7 @@ regression_lin <- function(.data
                                         , .annotation = .annotation
                                         , .cpus = .cpus
                                         , .std_prd = .std_prd
+                                        , .std_cov = .std_cov
                                         , .summary = .summary
                                         , .interaction = .interaction
                                         , ...

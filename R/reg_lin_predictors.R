@@ -11,6 +11,8 @@
 #' pname, unit, short_pname, comment) that contains pretty names for the used
 #' variables and their dummy variables.
 #' @param .std_prd If TRUE, predictors are standardized using std(predictor).
+#' @param .std_cov Input vector of covariates that are standardized using
+#' std(covariate).
 #' @param .summary If TRUE, an additional summary of all analyses is returned.
 #' @param .interaction Can be used to input interactions.
 #' @param ... Optional input passed to the regression function.
@@ -21,13 +23,18 @@ reg_lin_predictors <- function(.data
                                , .outcome
                                , .annotation
                                , .std_prd
+                               , .std_cov
                                , .summary
                                , .interaction
                                , ...
 ){
+
   # Filter out cases that miss the outcome
+  ## For input data.frame
   if (is.data.frame(.data)) {
     .data <- dplyr::filter(.data, !is.na(tidyselect::all_of(.outcome)))
+
+  ## For input mids object
   } else if (mice::is.mids(.data)) {
     .data <- mice::filter(.data, !is.na(.data[[.outcome]]))
   }
@@ -39,6 +46,7 @@ reg_lin_predictors <- function(.data
   .predictors <- .predictors[which(!.predictors %in% .outcome)]
 
   # If wanted, standardize predictors
+  ## With .annotation
   if (.std_prd == TRUE && !is.null(.annotation)) {
     for (i in seq_along(.predictors)) {
       if (.predictors[i] != "base_model") {
@@ -49,8 +57,52 @@ reg_lin_predictors <- function(.data
       }
     }
     rownames(.annotation) <- .annotation[[1]]
+
+  ## Without .annotation
   } else if (.std_prd == TRUE && is.null(.annotation)) {
     .predictors <- paste0("scale(", .predictors, ")")
+  }
+
+  # If wanted, standardize covariates
+  ## With .annotation
+  if (!is.null(.std_cov) && !is.null(.annotation)) {
+    for (i in seq_along(.std_cov)) {
+      name <- paste0("scale(", .std_cov[i], ")")
+      pname <-
+      paste0("std(",
+             .annotation[.covariates[.covariates == .std_cov[i]], "pname"],
+             ")")
+      .annotation <- rbind(.annotation, c(name, pname, "", "", ""))
+
+      # Check if covariate is in interaction and standardize as well
+      if (!is.null(.interaction)) {
+        for (j in seq_along(.interaction)) {
+          if (stringr::str_detect(.interaction[j], .std_cov[i])) {
+            .interaction[j] <-
+              stringr::str_replace(.interaction[j],
+                                   .std_cov[i],
+                                   paste0("scale(", .std_cov[i], ")")
+                                  )
+          }
+        }
+      }
+
+      .covariates[.covariates == .std_cov[i]] <-
+        paste0("scale(",
+               .covariates[.covariates == .std_cov[i]],
+               ")"
+              )
+    }
+      rownames(.annotation) <- .annotation[[1]]
+
+  ## Without .annotation
+  } else if (!is.null(.std_cov) && is.null(.annotation)) {
+    for (i in seq_along(.std_cov)) {
+      .covariates[.covariates == .std_cov[i]] <-
+        paste0("scale(",
+        .covariates[.covariates == .std_cov[i]],
+        ")")
+    }
   }
 
   # Create annotation entries for interaction-terms, if .interaction != NULL

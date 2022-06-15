@@ -13,6 +13,8 @@
 #' @param .cpus Input number of desired cpus to use. Useful only in case of big
 #' datasets and multiple analysis.
 #' @param .std_prd If TRUE, predictors are standardized using std(predictor).
+#' @param .std_cov Input vector of covariates that are standardized using
+#' std(covariate).
 #' @param .summary If TRUE, an additional summary of all analyses is returned.
 #' @param .interaction Can be used to input interactions.
 #' @param ... Optional input passed to the regression function.
@@ -26,6 +28,7 @@ reg_lin_sort_by_outcomes <- function(.data
                                      , .annotation
                                      , .cpus
                                      , .std_prd
+                                     , .std_cov
                                      , .summary
                                      , .interaction
                                      , ...
@@ -43,6 +46,7 @@ reg_lin_sort_by_outcomes <- function(.data
                                 , .covariates = .covariates
                                 , .annotation = .annotation
                                 , .std_prd = .std_prd
+                                , .std_cov = .std_cov
                                 , .summary = .summary
                                 , .interaction = .interaction
                                 , ...
@@ -90,6 +94,7 @@ reg_lin_sort_by_outcomes <- function(.data
         , .covariates = .covariates
         , .annotation = .annotation
         , .std_prd = .std_prd
+        , .std_cov = .std_cov
         , .summary = .summary
         , .interaction = .interaction
         , ...

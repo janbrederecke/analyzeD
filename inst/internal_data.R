@@ -38,9 +38,10 @@ regression_lin(
 , .outcomes = .outcomes
 , .predictors = .predictors
 , .covariates = .covariates
-, .annotation = .annotation
+, .annotation = NULL
 , .sort_by = "outcomes"
-, .cpus = 1
+, .cpus = 2
 , .summary = TRUE
 , .std_prd = TRUE
-, .interaction = "year * year2")
+, .std_cov = NULL
+, .interaction = NULL)

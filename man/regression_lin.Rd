@@ -14,6 +14,7 @@ regression_lin(
   .cpus = 1,
   .sort_by = "outcomes",
   .std_prd = FALSE,
+  .std_cov = NULL,
   .summary = FALSE,
   .interaction = NULL,
   ...
@@ -43,9 +44,13 @@ by "outcomes" or by "predictors".}
 
 \item{.std_prd}{If TRUE, predictors are standardized using std(predictor).}
 
+\item{.std_cov}{Input vector of covariates that are standardized using
+std(covariate).}
+
 \item{.summary}{If TRUE, an additional summary of all analyses is returned.}
 
-\item{.interaction}{Can be used to input interactions.}
+\item{.interaction}{Can be used to input interactions using the format
+c("variable1 * variable2", "variable2 * variable3").}
 
 \item{...}{Optional input passed to the regression function.}
 }

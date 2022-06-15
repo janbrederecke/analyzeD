@@ -11,6 +11,7 @@ reg_lin_predictors(
   .outcome,
   .annotation,
   .std_prd,
+  .std_cov,
   .summary,
   .interaction,
   ...
@@ -30,6 +31,9 @@ pname, unit, short_pname, comment) that contains pretty names for the used
 variables and their dummy variables.}
 
 \item{.std_prd}{If TRUE, predictors are standardized using std(predictor).}
+
+\item{.std_cov}{Input vector of covariates that are standardized using
+std(covariate).}
 
 \item{.summary}{If TRUE, an additional summary of all analyses is returned.}
 
