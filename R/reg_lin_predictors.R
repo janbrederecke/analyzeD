@@ -4,7 +4,7 @@
 #' through the provided predictors.
 #'
 #' @param .data A data.frame or .mids object.
-#' @param .outcomes A character vector containing the outcomes.
+#' @param .outcome A character vector containing the outcome.
 #' @param .predictors A character vector containing the predictors.
 #' @param .covariates A character vector containing covariates.
 #' @param .annotation A matrix or data.frame of format (name, pname, unit,

@@ -24,6 +24,8 @@ reg_lin_predictors(
 
 \item{.covariates}{A character vector containing covariates.}
 
+\item{.outcome}{A character vector containing the outcome.}
+
 \item{.annotation}{A matrix or data.frame of format (name, pname, unit,
 short_pname, comment) that contains pretty names for the used variables.}
 
@@ -38,8 +40,6 @@ character vectors containing the interaction variables, e.g.
 list(c("variable1", "variable2"), c("variable2", "variable3")).}
 
 \item{...}{Optional input passed directly to the regression function.}
-
-\item{.outcomes}{A character vector containing the outcomes.}
 }
 \description{
 This function calculates the regressions while shuffeling
