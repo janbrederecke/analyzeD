@@ -1,3 +1,8 @@
+rm(list = ls())
+unloadNamespace("analyzeD")
+
+devtools::load_all()
+
 internal_data <- function(size = 1
 ) {
   library(palmerpenguins)
@@ -39,11 +44,11 @@ regression_lin(
 , .predictors = .predictors
 , .covariates = .covariates
 , .annotation = .annotation
-, .sort_by = "outcomes"
+, .sort_by = "predictors"
 , .cpus = 1
 , .summary = TRUE
 , .std_prd = TRUE
-, .std_cov = NULL
+, .std_cov = c("year",  "year3")
 , .interaction = list(c("year", "year2"),
                   c("year2", "year3")
                  )

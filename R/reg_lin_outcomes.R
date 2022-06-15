@@ -76,12 +76,9 @@ reg_lin_outcomes <- function(.data
       # Check if covariate is in interaction and standardize as well
       if (!is.null(.interaction)) {
         for (j in seq_along(.interaction)) {
-          if (stringr::str_detect(.interaction[j], .std_cov[i])) {
-            .interaction[j] <-
-              stringr::str_replace(.interaction[j],
-                                   .std_cov[i],
-                                   paste0("scale(", .std_cov[i], ")")
-                                  )
+          if (.std_cov[i] %in% .interaction[[j]]) {
+            .interaction[[j]][which(.interaction[[j]] == .std_cov[i])] <-
+              paste0("scale(", .std_cov[i], ")")
           }
         }
       }
@@ -108,17 +105,18 @@ reg_lin_outcomes <- function(.data
   # Create annotation entries for interaction-terms, if .interaction != NULL
   if (!is.null(.interaction) && !is.null(.annotation)) {
     for (i in seq_along(.interaction)) {
-      vars <- unlist(stringr::str_split(string = .interaction[i],
-                                        pattern = "\\*",
-                                        n = 2))
-      vars <- stringr::str_remove_all(vars, " ")
+      vars <- .interaction[[i]]
       name <- paste0(vars[1], ":", vars[2])
-      pname <- paste0(.annotation[[2]][which(.annotation[[1]] %in%
-                                               vars[1])],
-                      ":",
-                      .annotation[[2]][which(.annotation[[1]] %in%
-                                               vars[2])])
+      pname <- paste0(
+        .annotation[[2]][which(.annotation[[1]] %in%
+          vars[1])],
+        ":",
+        .annotation[[2]][which(.annotation[[1]] %in%
+          vars[2])]
+      )
       .annotation <- rbind(.annotation, c(name, pname, "", "", ""))
+
+      .interaction[[i]] <- paste0(.interaction[[i]], collapse = "*")
     }
     rownames(.annotation) <- .annotation[[1]]
   }
