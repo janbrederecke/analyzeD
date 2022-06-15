@@ -9,9 +9,11 @@
 #' variables and their dummy variables.
 #'
 reg_lin_predictors_summary <- function(.fit_list
-                                              , .outcome
-                                              , .annotation
+                                       , .outcome
+                                       , .annotation
 ){
+
+  # If an annotation is provided, extract outcome pname
   if (!is.null(.annotation)) {
     pname_outcome <- vector(mode = "character", length = 1)
     pname_outcome <- .annotation[["pname"]][which(.annotation[["name"]] %in%
@@ -31,12 +33,12 @@ reg_lin_predictors_summary <- function(.fit_list
   # Create rows of the summary table
   for (i in seq_along(.fit_list)) {
 
+    # If the base_model is included
     if (names(.fit_list)[i] == "base_model") {
-
       summary_table[(nrow(summary_table) + 1), 1] <- "Base model"
 
+    # For normal models
     } else {
-
       summary_table <- dplyr::bind_rows(summary_table, .fit_list[[i]][2, ])
     }
 
@@ -59,20 +61,24 @@ reg_lin_predictors_summary <- function(.fit_list
     names(summary_table)[10] <- "AIC"
   }
 
+  # Add the respective outcome to the summary table
+  ## In case a pname for the outcome is provided
   if (!exists("pname_outcome")) {
-
     summary_table <- dplyr::mutate(summary_table,
-                                   Outcome = rep(.outcome,
+                                   outcome = rep(.outcome,
                                                  nrow(summary_table)),
-                                   .before = tidyselect::all_of("term"))
+                                   .before = tidyselect::all_of("term")
+                                  )
 
+  ## In case no pname for the outcome is provided
   } else {
-
     summary_table <- dplyr::mutate(summary_table,
                                    outcome = rep(pname_outcome,
                                                  nrow(summary_table)),
-                                   .before = tidyselect::all_of("term"))
+                                   .before = tidyselect::all_of("term")
+                                  )
   }
 
+  # Return summary table
   summary_table
 }

@@ -52,15 +52,21 @@ regression_lin <- function(.data
   }
 
   # Check if .outcomes has been specified and is in the right format
+  ## Check if outcomes have been specified at all
   if (is.null(.outcomes)) {
     stop("You have to specify outcomes!")
+
+  ## Check if the outcomes vector is in the right format
   } else if (!is.null(.outcomes) && class(.outcomes) != "character") {
     stop("Outcomes have to be provided in a vector of type 'character'.")
   }
 
   # Check if .predictors has been specified and is in the right format
+  ## Check if predictors have been specified at all
   if (is.null(.predictors)) {
     stop("You have to specify predictors!")
+
+  ## Check if the predictors vector is in the right format
   } else if (!is.null(.predictors) && class(.predictors) != "character") {
     stop("Predictors have to be provided in a vector of type 'character'.")
   }
@@ -71,10 +77,15 @@ regression_lin <- function(.data
   }
 
   # Check if .annotation has been specified and is in the right format
+  ## Check if annotation has been specified as a matrix and turn to data.frame
   if (!is.null(.annotation) && is.matrix(.annotation)) {
     .annotation <- as.data.frame(.annotation)
+
+  ## Check if annotation has been specified as a data.frame and stop if not
   } else if (!is.null(.annotation) && !is.data.frame(.annotation)) {
     stop("Annotation has to be provided as a matrix or data.frame")
+
+  ## Check if a specified annotation has the right column names and stop if not
   } else if (!is.null(.annotation) &&
              !all(c("name", "pname") %in% names(.annotation))) {
     stop("The annotation has to include the columns 'name' and 'pname'.")
@@ -82,13 +93,17 @@ regression_lin <- function(.data
   rownames(.annotation) <- .annotation$name
 
   # Subset data if .subset != NULL
+  ## For data.frame
   if (!is.null(.subset) && is.data.frame(.data)) {
     .data <- subset(.data, eval(parse(text = .subset)))
+
+  ## For mids object
   } else if (!is.null(.subset) && mice::is.mids(.data)) {
     .data <- mice::filter(.data, eval(parse(text = .subset)))
   }
 
   # Call the sorting functions depending on the .sort_by input
+  ## For outcomes
   if (.sort_by == "outcomes") {
     return(reg_lin_sort_by_outcomes(.data = .data
                                       , .outcomes = .outcomes
@@ -103,6 +118,8 @@ regression_lin <- function(.data
                                       , ...
                                       )
     )
+
+  ## For predictors
   }  else if (.sort_by == "predictors") {
     return(reg_lin_sort_by_predictors(.data = .data
                                         , .outcomes = .outcomes

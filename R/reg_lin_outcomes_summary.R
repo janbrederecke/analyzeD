@@ -15,6 +15,7 @@ reg_lin_outcomes_summary <- function(.fit_list
                                      , .annotation
 ){
 
+  # If an annotation is provided, extract outcome pnames
   if (!is.null(.annotation)) {
     pnames_outcomes <- vector(mode = "character", length = length(.outcomes))
     for (i in seq_along(.outcomes)) {
@@ -23,37 +24,63 @@ reg_lin_outcomes_summary <- function(.fit_list
     }
   }
 
+  # Check if AIC should be included (only complete case analyses)
+  if ("AIC" %in% .fit_list[[1]][["term"]]) {
+    aic_col <- TRUE
+  } else {
+    aic_col <- FALSE
+  }
+
+  # Create empty summary table with names of the .fit_list columns
   summary_table <- .fit_list[[1]][FALSE, ]
 
+  # Create rows of the summary table
   for (i in seq_along(.fit_list)) {
 
+    # For the base_model if included
     if (.predictor == "base_model") {
-
       summary_table[(nrow(summary_table) + 1), 1] <- "Base model"
 
+    # For normal models
     } else {
-
       summary_table <- dplyr::bind_rows(summary_table, .fit_list[[i]][2, ])
     }
 
-    summary_table[i, 7] <- .fit_list[[i]][nrow(.fit_list[[i]]), 7]
+    summary_table[i, 7] <-
+      .fit_list[[i]][[7]][which(.fit_list[[i]][["term"]] == "r.squared")]
+    summary_table[i, 8] <-
+      .fit_list[[i]][[7]][which(.fit_list[[i]][["term"]] == "adj.r.squared")]
+    summary_table[i, 9] <-
+      .fit_list[[i]][[7]][which(.fit_list[[i]][["term"]] == "nobs")]
+    if (aic_col == TRUE) {
+      summary_table[i, 10] <-
+        .fit_list[[i]][[7]][which(.fit_list[[i]][["term"]] == "AIC")]
+    }
   }
 
-  names(summary_table)[7] <- "nobs"
+  names(summary_table)[7] <- "r.squared"
+  names(summary_table)[8] <- "adj.r.squared"
+  names(summary_table)[9] <- "nobs"
+  if (aic_col == TRUE) {
+    names(summary_table)[10] <- "AIC"
+  }
 
+  # Add the respective outcome to the summary table
+  ## In case a pname for the outcome is provided
   if (!exists("pnames_outcomes")) {
-
     summary_table <- dplyr::mutate(summary_table,
-                                   Outcome = .outcomes,
-                                   .before = tidyselect::all_of("term"))
+                                   outcome = .outcomes,
+                                   .before = tidyselect::all_of("term")
+                                  )
 
+  ## In case no pname is provided
   } else {
-
     summary_table <- dplyr::mutate(summary_table,
                                    outcome = pnames_outcomes,
-                                   .before = tidyselect::all_of("term"))
-
+                                   .before = tidyselect::all_of("term")
+                                  )
   }
 
+  # Return summary table
   summary_table
 }

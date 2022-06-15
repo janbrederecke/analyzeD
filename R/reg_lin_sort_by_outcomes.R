@@ -38,7 +38,6 @@ reg_lin_sort_by_outcomes <- function(.data
   if (.cpus == 1) {
 
     # Call the reg_lin_predictors function
-
     fit_list <- lapply(.outcomes, function(outcome) {
       reg_lin_predictors(.data = .data
                                 , .outcome = outcome
@@ -65,7 +64,7 @@ reg_lin_sort_by_outcomes <- function(.data
     parallel::clusterExport(cl = my_cluster,
                             varlist = c("reg_lin_predictors_summary"),
                             envir = environment()
-                          )
+                           )
 
     ## Actual registering of cluster
     doParallel::registerDoParallel(cl = my_cluster)
@@ -73,13 +72,12 @@ reg_lin_sort_by_outcomes <- function(.data
     n <- length(.outcomes)
 
     # Calculate regressions for each outcome on a single CPU
-
     fit_list <- foreach::foreach(
       i = 1:n,
       .packages = c("broom", "dplyr", "stringr", "tidyselect"),
       .export = c("reg_lin_predictors",
                   "reg_lin_predictors_summary"
-                )
+                 )
 
     ) %dopar% {
 

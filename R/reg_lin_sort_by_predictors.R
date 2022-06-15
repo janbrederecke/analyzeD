@@ -13,6 +13,8 @@
 #' @param .cpus Input number of desired cpus to use. Useful only in case of big
 #' datasets and multiple analysis.
 #' @param .std_prd If TRUE, predictors are standardized using std(predictor).
+#' @param .std_cov Input vector of covariates that are standardized using
+#' std(covariate).
 #' @param .summary If TRUE, an additional summary of all analyses is returned.
 #' @param .interaction Can be used to input interactions.
 #' @param ... Optional input passed to the regression function.
@@ -26,14 +28,16 @@ reg_lin_sort_by_predictors <- function(.data
                                          , .annotation
                                          , .cpus
                                          , .std_prd
+                                         , .std_cov
                                          , .summary
                                          , .interaction
                                          , ...
 ){
 
-  # Processing on single CPU
+  # Process on single CPU
   if (.cpus == 1) {
 
+    # Call the reg_lin_outcomes function
     fit_list <- lapply(.predictors, function(predictor) {
       reg_lin_outcomes(.data = .data
                               , .outcomes = .outcomes
@@ -48,8 +52,8 @@ reg_lin_sort_by_predictors <- function(.data
     })
     fit_list
 
-    # Processing on multiple CPUS
-  } else if (.cpus >= 1) {
+    # Processing in parallel on multiple CPUS
+  } else if (.cpus > 1) {
 
     print(paste0("Parallel processing. Using ", .cpus, " cores."))
 
@@ -59,7 +63,8 @@ reg_lin_sort_by_predictors <- function(.data
     ## Export summary function because the foreach export did not work properly
     parallel::clusterExport(cl = my_cluster,
                             varlist = c("reg_lin_outcomes_summary"),
-                            envir = environment())
+                            envir = environment()
+                           )
 
     ## Actual registering of cluster
     doParallel::registerDoParallel(cl = my_cluster)
@@ -71,37 +76,42 @@ reg_lin_sort_by_predictors <- function(.data
       i = 1:n,
       .packages = c("broom", "dplyr", "stringr", "tidyselect"),
       .export = c("reg_lin_outcomes",
-                  "reg_lin_outcomes_summary")
+                  "reg_lin_outcomes_summary"
+                 )
 
     ) %dopar% {
 
+      ## Get one predictor to distribute to a core
       predictor <- .predictors[i]
 
       ## Fit regression models for specified outcome
-      fit_list_outcomes <- reg_lin_outcomes(.data = .data
-                                                   , .outcomes = .outcomes
-                                                   , .predictor = predictor
-                                                   , .covariates = .covariates
-                                                   , .annotation = .annotation
-                                                   , .std_prd = .std_prd
-                                                   , .summary = .summary
-                                                   , .interaction = .interaction
-                                                   , ...
-                                                   )
+      fit_list_outcomes <- reg_lin_outcomes(
+        .data = .data
+        , .outcomes = .outcomes
+        , .predictor = predictor
+        , .covariates = .covariates
+        , .annotation = .annotation
+        , .std_prd = .std_prd
+        , .std_cov = .std_cov
+        , .summary = .summary
+        , .interaction = .interaction
+        , ...
+      )
+
       ## Return the list of results per predictor
       return(fit_list_outcomes)
     }
 
     # Stop the cluster
     parallel::stopCluster(cl = my_cluster)
-
-    # Return the list of lists
-    fit_list
   }
 
   # Name the list of lists using the respective outcomes
+  ## For standardized predictors
   if (.std_prd == TRUE) {
     names(fit_list) <- paste0("std(", .predictors, ")")
+
+  ## For non-standardized predictors
   } else {
     names(fit_list) <-  .predictors
   }

@@ -69,9 +69,10 @@ reg_lin_predictors <- function(.data
     for (i in seq_along(.std_cov)) {
       name <- paste0("scale(", .std_cov[i], ")")
       pname <-
-      paste0("std(",
-             .annotation[.covariates[.covariates == .std_cov[i]], "pname"],
-             ")")
+        paste0("std(",
+               .annotation[.covariates[.covariates == .std_cov[i]], "pname"],
+               ")"
+              )
       .annotation <- rbind(.annotation, c(name, pname, "", "", ""))
 
       # Check if covariate is in interaction and standardize as well
@@ -87,21 +88,22 @@ reg_lin_predictors <- function(.data
         }
       }
 
-      .covariates[.covariates == .std_cov[i]] <-
-        paste0("scale(",
-               .covariates[.covariates == .std_cov[i]],
-               ")"
-              )
+    .covariates[.covariates == .std_cov[i]] <-
+      paste0("scale(",
+             .covariates[.covariates == .std_cov[i]],
+             ")"
+            )
     }
-      rownames(.annotation) <- .annotation[[1]]
+    rownames(.annotation) <- .annotation[[1]]
 
   ## Without .annotation
   } else if (!is.null(.std_cov) && is.null(.annotation)) {
     for (i in seq_along(.std_cov)) {
       .covariates[.covariates == .std_cov[i]] <-
         paste0("scale(",
-        .covariates[.covariates == .std_cov[i]],
-        ")")
+          .covariates[.covariates == .std_cov[i]],
+          ")"
+          )
     }
   }
 
@@ -169,7 +171,8 @@ reg_lin_predictors <- function(.data
       )
       eval(parse(text = text2eval))
       model_tidy <- tibble::as_tibble(broom::tidy(mice::pool(model),
-                                                  conf.int = TRUE))
+                                                  conf.int = TRUE)
+                                      )
       model_glance <- tibble::as_tibble(broom::glance(mice::pool(model),))
     }
 
@@ -214,12 +217,11 @@ reg_lin_predictors <- function(.data
 
   # Add summary if wanted
   if (.summary == TRUE) {
-
     fit_list[["summary"]] <-
       reg_lin_predictors_summary(.fit_list = fit_list
-                                        , .outcome = .outcome
-                                        , .annotation = .annotation
-                                       )
+                                 , .outcome = .outcome
+                                 , .annotation = .annotation
+                                )
   }
   fit_list
 }
