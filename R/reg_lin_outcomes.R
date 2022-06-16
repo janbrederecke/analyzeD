@@ -52,12 +52,32 @@ reg_lin_outcomes <- function(.data
       name <- paste0("scale(", .predictor, ")")
       pname <- paste0("std(", .annotation[.predictor, "pname"], ")")
       .annotation <- rbind(.annotation, c(name, pname, "", "", ""))
+
+      # Check if predictor is in interaction and standardize there as well
+      if (!is.null(.interaction)) {
+        for (j in seq_along(.interaction)) {
+          if (.predictor %in% .interaction[[j]]) {
+            .interaction[[j]][which(.interaction[[j]] == .predictor)] <-
+              paste0("scale(", .predictor, ")")
+          }
+        }
+      }
       .predictor <- paste0("scale(", .predictor, ")")
     }
     rownames(.annotation) <- .annotation[[1]]
 
   ## Without .annotation
   } else if (.std_prd == TRUE && is.null(.annotation)) {
+
+    # Check if predictor is in interaction and standardize as well
+    if (!is.null(.interaction)) {
+      for (j in seq_along(.interaction)) {
+        if (.predictor %in% .interaction[[j]]) {
+          .interaction[[j]][which(.interaction[[j]] == .predictor)] <-
+            paste0("scale(", .predictor, ")")
+        }
+      }
+    }
     .predictor <- paste0("scale(", .predictor, ")")
   }
 

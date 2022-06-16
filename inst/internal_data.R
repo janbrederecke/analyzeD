@@ -42,17 +42,15 @@ internal_data()
 regression_lin(
   .data = .data
 , .outcomes = .outcomes
-, .predictors = .predictors
+, .predictors = "flipper_length_mm"
 , .covariates = .covariates
 , .annotation = .annotation
 , .sort_by = "predictors"
-, .cpus = 2
+, .cpus = 1
 , .summary = TRUE
 , .std_prd = TRUE
 , .std_cov = c("year",  "year3")
-, .interaction = list(c("year", "year2"),
-                  c("year2", "year3")
-                 )
+, .interaction = list(c("flipper_length_mm", "year3"))
 )
 
 print("------------")
@@ -67,17 +65,17 @@ print("------------")
 print("------------")
 
 regression_lin(
-  .data = .imp_data
+  .data = .data
 , .outcomes = .outcomes
-, .predictors = .predictors
+, .predictors = c("base_model", .predictors)
 , .covariates = .covariates
-, .annotation = NULL
+, .annotation = .annotation
 , .sort_by = "outcomes"
-, .cpus = 1
+, .cpus = 2
 , .summary = TRUE
-, .std_prd = TRUE
-, .std_cov = NULL
+, .std_prd = FALSE
+, .std_cov = c("year", "year3")
 , .interaction = list(c("year", "year2"),
-                  c("year2", "year3")
-                 )
+                      c("year2", "year3")
+                     )
 )
