@@ -148,6 +148,3 @@ regression_lin <- function(.data
     )
   }
 }
-
-# Exposing 'i' to global environment
-globalVariables(c("i"))

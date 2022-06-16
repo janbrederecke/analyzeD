@@ -120,3 +120,6 @@ reg_lin_sort_by_predictors <- function(.data
   # Return results
   fit_list
 }
+
+# Exposing 'i' to global environment
+globalVariables(c("i"))
