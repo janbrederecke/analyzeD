@@ -110,9 +110,8 @@ regression_lin <- function(.data
   if (is.null(.cpus) || !.cpus %in% 1:parallel::detectCores()) {
     stop(paste0("The number of cpus has to be an integer between 1 and ",
                   parallel::detectCores(),
-                  "."))
+                  ".")
                )
-        )
   }
 
   # Call the sorting functions depending on the .sort_by input
