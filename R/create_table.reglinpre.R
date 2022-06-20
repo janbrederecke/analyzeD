@@ -1,3 +1,13 @@
+#' @title create_table.reglinpre
+#'
+#' @description Generic function to create HTML tables from lists of results
+#'
+#' @param .fit_list A list of fits produced using functions of the analyzeD
+#' package that is sorted by the predictors.
+#' @param .annotation An annotation file.
+#' @param ... Additional arguments to be passed to the function.
+#' @export
+#'
 create_table.reglinpre <- function(.fit_list
                                    , .annotation = NULL
                                    , ...
