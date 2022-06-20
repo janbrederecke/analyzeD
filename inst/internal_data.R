@@ -40,13 +40,13 @@ internal_data <- function(size = 1
 internal_data()
 
 regression_lin(
-  .data = .data
+  .data = .imp_data
 , .outcomes = .outcomes
 , .predictors = "flipper_length_mm"
 , .covariates = .covariates
 , .annotation = .annotation
-, .sort_by = "predictors"
-, .cpus = 1
+, .sort_by = "outcomes"
+, .cpus = 4
 , .summary = TRUE
 , .std_prd = TRUE
 , .std_cov = c("year",  "year3")
@@ -70,7 +70,7 @@ regression_lin(
 , .predictors = c("base_model", .predictors)
 , .covariates = .covariates
 , .annotation = .annotation
-, .sort_by = "outcomes"
+, .sort_by = "predictors"
 , .cpus = 2
 , .summary = TRUE
 , .std_prd = FALSE
