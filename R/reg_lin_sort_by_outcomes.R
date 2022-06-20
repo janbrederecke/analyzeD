@@ -109,6 +109,9 @@ reg_lin_sort_by_outcomes <- function(.data
   # Name the list of lists using the respective outcomes
   names(fit_list) <- .outcomes
 
+  # Define class
+  class(fit_list) <- c("reglinout", "list")
+
   # Return results
   fit_list
 }

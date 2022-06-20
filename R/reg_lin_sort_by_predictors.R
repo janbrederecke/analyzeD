@@ -117,6 +117,9 @@ reg_lin_sort_by_predictors <- function(.data
     names(fit_list) <-  .predictors
   }
 
+  # Define class
+  class(fit_list) <- c("reglinpre", "list")
+
   # Return results
   fit_list
 }
