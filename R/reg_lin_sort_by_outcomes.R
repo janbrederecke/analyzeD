@@ -112,6 +112,13 @@ reg_lin_sort_by_outcomes <- function(.data
   # Define class
   class(fit_list) <- c("reglinout", "list")
 
+  # Declare additional class attribute for summary
+  if (.summary == TRUE) {
+    class(fit_list) <- c("with_summary", class(fit_list))
+  } else if (.summary == FALSE) {
+    class(fit_list) <- c("without_summary", class(fit_list))
+  }
+
   # Return results
   fit_list
 }

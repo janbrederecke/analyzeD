@@ -1,14 +1,14 @@
-create_table.reglinpre <- function(.fit_list
+create_table.reglinout <- function(.fit_list
                                    , .annotation = NULL
                                    , ...
 ){
 
   # Check input object
-  if (!"reglinpre" %in% class(.fit_list)) {
-    stop("fit_list must be a list of type 'reglinpre'")
+  if (!"reglinout" %in% class(.fit_list)) {
+    stop("fit_list must be a list of type 'reglinout'")
   }
 
-  # Produce one summary table from all the reglinpre objects
+  # Produce one summary table from all the reglinout objects
   if ("with_summary" %in% class(.fit_list)) {
 
   # Create empty summary table with names of the .fit_list$summary columns
@@ -27,8 +27,8 @@ create_table.reglinpre <- function(.fit_list
     for (j in seq_along(.fit_list[[i]])) {
 
       # Create table caption
-      predictor_name <- names(.fit_list)[i]
-      outcome_name <- names(.fit_list[[i]])[j]
+      outcome_name <- names(.fit_list)[i]
+      predictor_name <- names(.fit_list[[i]])[j]
 
       ## If an annotation is provided use pretty names
       if (!is.null(.annotation)) {

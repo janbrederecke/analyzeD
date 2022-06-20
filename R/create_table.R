@@ -1,7 +1,7 @@
 
 #' @title create_table
 #'
-#' @description Generec function to create HTML tables from lists of results
+#' @description Generic function to create HTML tables from lists of results
 #'
 #' @param .fit_list A list of fits produced using functions of the analyseD
 #' package.
