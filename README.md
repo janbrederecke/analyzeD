@@ -5,7 +5,7 @@ R package with useful functions for data analysis and reporting.
 ## Overview
 
 ### regression_ family
-**Easily compute different kinds of regression** 
+**Easily compute different kinds of regression**
 
 -   `regression_lin()` Calculates linear regression models using `ln()`.
 
@@ -15,7 +15,7 @@ R package with useful functions for data analysis and reporting.
 `survival::coxph()`.
 
 ### random_forest_ family
-**Easily compute different kinds of random forests** 
+**Easily compute different kinds of random forests**
 
 -   `random_forest_regr()` Calculates random forest models for regression
 problems using `ranger::ranger()`.
@@ -26,10 +26,10 @@ problems using `ranger::ranger()`.
 -   `random_forest_surv()` Calculates random forest models for survival
 problems using `ranger::ranger()`.
 
-### output_ family
-**Turn the output of regression_ and random_forest_ functions into HTML output** 
+### create_table family
+**Turn the output of regression_ and random_forest_ functions into HTML output**
 
--   `output_table()` Creates HTML tables from regression_ and random_forest_ results.
+-   `create_table()` Creates HTML tables from regression_ and random_forest_ results.
 
 ## Installation
 
