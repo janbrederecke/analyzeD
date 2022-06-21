@@ -33,8 +33,20 @@ create_table.reglin <- function(.fit_list
     }
     rm(summary)
 
-    # Print summary_table if it exists
+    # Add pretty HTML names to the summary_table
+    names(summary_table) <- c("Outcome",
+                              "Predictor",
+                              "Estimate",
+                              "CI low",
+                              "CI high",
+                              "<i>p</i>",
+                              "Significance",
+                              "R<sup>2</sup>",
+                              "Adjusted R<sup>2</sup>",
+                              "<i>N</i>"
+                             )
 
+    # Print the summary_table
     print(kableExtra::kable_styling(
       kable_input = knitr::kable(
         summary_table,
@@ -82,22 +94,32 @@ create_table.reglin <- function(.fit_list
                             " on ",
                             outcome_name)
 
-      # Print HTML table
-      options(knitr.kable.NA = "")
-      print(kableExtra::kable_styling(
-        kable_input = knitr::kable(
-          .fit_list[[i]][[j]],
-          format = "html",
-          digits = 3,
-          caption = caption,
-          escape = FALSE
-        ),
-        full_width = TRUE,
-        bootstrap_options = c("striped",
-                            "hover",
-                            "condensed",
-                            "responsive")
-      ))
+        # Insert HTML names for each table
+        names(.fit_list[[i]][[j]]) <- c("Predictor",
+                                        "Estimate",
+                                        "CI low",
+                                        "CI high",
+                                        "<i>p</i>",
+                                        "Significance",
+                                        "Info"
+                                       )
+
+        # Print HTML table
+        options(knitr.kable.NA = "")
+        print(kableExtra::kable_styling(
+          kable_input = knitr::kable(
+            .fit_list[[i]][[j]],
+            format = "html",
+            digits = 3,
+            caption = caption,
+            escape = FALSE
+          ),
+          full_width = TRUE,
+          bootstrap_options = c("striped",
+                              "hover",
+                              "condensed",
+                              "responsive")
+        ))
       }
     }
   }
