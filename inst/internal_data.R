@@ -39,13 +39,13 @@ internal_data <- function(size = 1
 
 internal_data()
 
-regression_lin(
+create_table(regression_lin(
   .data = .imp_data
 , .outcomes = .outcomes
 , .predictors = .predictors[1]
 , .covariates = .covariates
 , .annotation = .annotation
-, .sort_by = "predictors"
+, .sort_by = "outcomes"
 , .cpus = 2
 , .summary = TRUE
 , .std_prd = FALSE
@@ -53,7 +53,7 @@ regression_lin(
 , .interaction = list(c(.predictors[1], "year2"),
                       c("year2", "year3")
                      )
-)
+))
 
 print("------------")
 print("------------")

@@ -110,7 +110,7 @@ reg_lin_sort_by_outcomes <- function(.data
   names(fit_list) <- .outcomes
 
   # Define class
-  class(fit_list) <- c("reglinout", "list")
+  class(fit_list) <- c("by_outcomes", "reglin", "list")
 
   # Declare additional class attribute for summary
   if (.summary == TRUE) {

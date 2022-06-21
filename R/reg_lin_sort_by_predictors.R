@@ -118,7 +118,7 @@ reg_lin_sort_by_predictors <- function(.data
   }
 
   # Define class
-  class(fit_list) <- c("reglinpre", "list")
+  class(fit_list) <- c("by_predictors", "reglin", "list")
 
   # Declare additional class attribute for summary
   if (.summary == TRUE) {
