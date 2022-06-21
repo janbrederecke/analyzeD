@@ -12,6 +12,8 @@ package.}
 
 \item{.annotation}{An annotation file.}
 
+\item{.only_summary}{Boolean indicating whether to only include the summary.}
+
 \item{...}{Additional arguments to be passed to the function.}
 }
 \description{

@@ -5,6 +5,7 @@
 #' @param .fit_list A list of fits produced using functions of the analyzeD
 #' package.
 #' @param .annotation An annotation file.
+#' @param .only_summary Boolean indicating whether to only include the summary.
 #' @param ... Additional arguments to be passed to the function.
 #' @export
 #'
@@ -118,7 +119,8 @@ create_table.reglin <- function(.fit_list
           bootstrap_options = c("striped",
                               "hover",
                               "condensed",
-                              "responsive")
+                              "responsive"
+                              )
         ))
       }
     }
