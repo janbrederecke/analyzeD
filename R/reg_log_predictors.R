@@ -200,7 +200,7 @@ reg_log_predictors <- function(.data
     if (is.data.frame(.data)) {
       model <- stats::glm(formula, family = binomial, data = .data, x = TRUE)
       if (.firth == TRUE) {
-        model <- stats::update(model, method = "brglm_fit", type = "AS_mean")
+        model <- update(model, method = "brglm2::brglm_fit", type = "AS_mean")
         print("Using Firth-corrected logistic regression.")
       }
       model_tidy <- broom::tidy(model, conf.int = TRUE)
@@ -235,30 +235,15 @@ reg_log_predictors <- function(.data
     }
     fit_list[[i]] <- dplyr::select(model_tidy, tidyselect::all_of(c(
                                    "term",
-                                   "OR",
+                                   "estimate",
                                    "conf.low",
                                    "conf.high",
                                    "p.value"))
                                   )
     fit_list[[i]][ncol(fit_list[[i]]) + 1] <- NA
-    fit_list[[i]][nrow(fit_list[[i]]) + 1, 7] <- model_glance$r.squared
-    names(fit_list[[i]])[7] <- "info"
-    fit_list[[i]][nrow(fit_list[[i]]), 1] <- "r.squared"
-    fit_list[[i]][nrow(fit_list[[i]]) + 1, 7] <- ifelse(
-      is.nan(model_glance$adj.r.squared) != TRUE,
-      model_glance$adj.r.squared,
-      0
-    )
-    if (is.nan(model_glance$adj.r.squared)) {
-            print("Negative adj.r.squared has been set to 0")
-    }
-    fit_list[[i]][nrow(fit_list[[i]]), 1] <- "adj.r.squared"
     fit_list[[i]][nrow(fit_list[[i]]) + 1, 1] <- "nobs"
     fit_list[[i]][nrow(fit_list[[i]]), 7] <- model_glance$nobs
-    if (is.data.frame(.data)) {
-      fit_list[[i]][nrow(fit_list[[i]]) + 1, 1] <- "AIC"
-      fit_list[[i]][nrow(fit_list[[i]]), 7] <- model_glance$AIC
-    }
+    names(fit_list[[i]][7]) <- "info"
     fit_list[[i]][6] <- ifelse(fit_list[[i]]$p.value < .05, "*", NA_character_)
     names(fit_list[[i]])[6] <- "significance"
     }
