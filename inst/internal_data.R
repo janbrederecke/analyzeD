@@ -4,7 +4,7 @@ unloadNamespace("analyzeD")
 devtools::load_all()
 
 internal_data <- function(size = 1
-                          , bin_out = FALSE
+                          , bin_out = TRUE
 ) {
   library(palmerpenguins)
   # Get palmer penguins dataset as d
