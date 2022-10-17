@@ -5,6 +5,7 @@ devtools::load_all()
 
 internal_data <- function(size = 1
                           , bin_out = TRUE
+                          , character_out = FALSE
 ) {
   library(palmerpenguins)
   # Get palmer penguins dataset as d
@@ -16,6 +17,10 @@ internal_data <- function(size = 1
   if (bin_out == TRUE) {
     .data[[3]] <- ifelse(.data[[3]] > 40, 1, 0)
     .data[[4]] <- ifelse(.data[[4]] > 18, 1, 0)
+  }
+
+  if (character_out) {
+    .data[, c(3)] <- lapply(.data[,c(3)], as.character)
   }
 
   .data <<- .data
@@ -44,6 +49,8 @@ internal_data <- function(size = 1
 }
 
 internal_data()
+
+
 
 create_table(regression_lin(
   .data = .imp_data

@@ -65,6 +65,26 @@ regression_lin <- function(.data
     stop("Outcomes have to be provided in a vector of type 'character'.")
   }
 
+  # Check if the data of the outcomes is in the right format
+  ## Check if outcomes are numeric
+  ## For data.frame
+  if (is.data.frame(.data)) {
+    outcomes_numeric <- apply(.data[.outcomes], 2, is.numeric)
+
+  ## For mids object
+  } else if (mice::is.mids(.data)) {
+    outcomes_numeric <- apply(mice::complete(.imp_data, 0)[.outcomes],
+                                              2,
+                                              is.numeric)
+  }
+  if (!all(outcomes_numeric)) {
+    stop("Outcomes have to be numeric.")
+  }
+  #num_unique <- function(x) length(unique(x))
+  #unique_values_outcomes <- apply(.data[.outcomes], 2, num_unique)
+
+  
+
   # Check if .predictors has been specified and is in the right format
   ## Check if predictors have been specified at all
   if (is.null(.predictors)) {
