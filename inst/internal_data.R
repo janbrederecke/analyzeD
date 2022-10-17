@@ -48,7 +48,7 @@ internal_data <- function(size = 1
     .interaction <<- c("year * year2", "year2 * year3")
 }
 
-internal_data()
+internal_data(bin_out = TRUE)
 
 
 

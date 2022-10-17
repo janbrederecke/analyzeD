@@ -66,24 +66,32 @@ regression_lin <- function(.data
   }
 
   # Check if the data of the outcomes is in the right format
-  ## Check if outcomes are numeric
+  ## Check if outcomes are numeric and binary
   ## For data.frame
+  num_unique <- function(x) length(unique(x))
   if (is.data.frame(.data)) {
     outcomes_numeric <- apply(.data[.outcomes], 2, is.numeric)
+    temp_data <- .data[complete.cases(.data[.outcomes]), .outcomes]
+    outcomes_unique_values <- apply(temp_data, 2, num_unique)
 
   ## For mids object
   } else if (mice::is.mids(.data)) {
-    outcomes_numeric <- apply(mice::complete(.imp_data, 0)[.outcomes],
-                                              2,
-                                              is.numeric)
+    temp_data <- mice::complete(.data, 0)[.outcomes]
+    outcomes_numeric <- apply(temp_data, 2, is.numeric)
+    temp_data <- temp_data[complete.cases(temp_data[.outcomes]), .outcomes]
+    outcomes_unique_values <- apply(temp_data, 2, num_unique)
   }
+
+  ## Stop if not all outcomes are numeric
   if (!all(outcomes_numeric)) {
     stop("Outcomes have to be numeric.")
   }
-  #num_unique <- function(x) length(unique(x))
-  #unique_values_outcomes <- apply(.data[.outcomes], 2, num_unique)
 
-  
+  ## Warn if outcomes appear binary
+  print(outcomes_unique_values)
+  if (any(outcomes_unique_values <= 2)) {
+    print("You seem to have binary outcomes in your data.")
+  }
 
   # Check if .predictors has been specified and is in the right format
   ## Check if predictors have been specified at all
