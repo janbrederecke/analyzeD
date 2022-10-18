@@ -1,11 +1,11 @@
-#' @title reg_log_predictors
+#' @title reg_log_outcomes
 #'
 #' @description This function calculates the regressions while shuffeling
-#' through the provided predictors.
+#' through the provided outcomes.
 #'
 #' @param .data A data.frame or .mids object.
-#' @param .outcome A character vector containing the outcome.
-#' @param .predictors A character vector containing the predictors.
+#' @param .outcomes A character vector containing the outcomes.
+#' @param .predictor A character vector containing the predictor.
 #' @param .covariates A character vector containing covariates.
 #' @param .annotation A matrix or data.frame of format (name, pname, unit,
 #' short_pname, comment) that contains pretty names for the used variables.
@@ -18,10 +18,10 @@
 #' @param .firth If TRUE, Firth-correction is used via brglm().
 #' @param ... Optional input passed directly to the regression function.
 #'
-reg_log_predictors <- function(.data
-                               , .predictors
+reg_log_outcomes <- function(.data
+                               , .outcomes
+                               , .predictor
                                , .covariates
-                               , .outcome
                                , .annotation
                                , .std_prd
                                , .std_cov
@@ -30,63 +30,59 @@ reg_log_predictors <- function(.data
                                , .firth
                                , ...
 ){
-
-  # Filter out cases that miss the outcome
+  
+  # Filter out cases that miss the predictor
   ## For input data.frame
   if (is.data.frame(.data)) {
-    .data <- dplyr::filter(.data, !is.na(tidyselect::all_of(.outcome)))
-
-  ## For input mids object
+    .data <- dplyr::filter(.data, !is.na(tidyselect::all_of(.predictor)))
+    
+    ## For input mids object
   } else if (mice::is.mids(.data)) {
-    .data <- mice::filter(.data, !is.na(.data[[.outcome]]))
+    .data <- mice::filter(.data, !is.na(.data[[.predictor]]))
   }
-
-  # Create output-list of length .predictors
-  fit_list <- vector(mode = "list", length = length(.predictors))
-
-  # In case the outcome is in .predictors, remove
-  .predictors <- .predictors[which(!.predictors %in% .outcome)]
-
-  # If wanted, standardize predictors
+  
+  # Create output-list of length .outcomes
+  fit_list <- vector(mode = "list", length = length(.outcomes))
+  
+  # In case the predictor is in .outcomes, remove
+  .outcomes <- .outcomes[which(!.outcomes %in% .predictor)]
+  
+  # If wanted, standardize predictor
   ## With .annotation
   if (.std_prd == TRUE && !is.null(.annotation)) {
-    for (i in seq_along(.predictors)) {
-      if (.predictors[i] != "base_model") {
-        name <- paste0("scale(", .predictors[i], ")")
-        pname <- paste0("std(", .annotation[.predictors[i], "pname"], ")")
-        .annotation <- rbind(.annotation, c(name, pname, "", "", ""))
-
-        # Check if predictor is in interaction and standardize there as well
-        if (!is.null(.interaction)) {
-          for (j in seq_along(.interaction)) {
-            if (.predictors[i] %in% .interaction[[j]]) {
-              .interaction[[j]][which(.interaction[[j]] == .predictors[i])] <-
-                paste0("scale(", .predictors[i], ")")
-            }
+    if (.predictor != "base_model") {
+      name <- paste0("scale(", .predictor, ")")
+      pname <- paste0("std(", .annotation[.predictor, "pname"], ")")
+      .annotation <- rbind(.annotation, c(name, pname, "", "", ""))
+      
+      # Check if predictor is in interaction and standardize there as well
+      if (!is.null(.interaction)) {
+        for (j in seq_along(.interaction)) {
+          if (.predictor %in% .interaction[[j]]) {
+            .interaction[[j]][which(.interaction[[j]] == .predictor)] <-
+              paste0("scale(", .predictor, ")")
           }
         }
-        .predictors[i] <- paste0("scale(", .predictors[i], ")")
       }
+      .predictor <- paste0("scale(", .predictor, ")")
     }
     rownames(.annotation) <- .annotation[[1]]
-
-  ## Without .annotation
+    
+    ## Without .annotation
   } else if (.std_prd == TRUE && is.null(.annotation)) {
-
+    
     # Check if predictor is in interaction and standardize as well
     if (!is.null(.interaction)) {
-      for (i in seq_along(.predictors)) {
-        for (j in seq_along(.interaction)) {
-          if (.predictors[i] %in% .interaction[[j]]) {
-            .interaction[[j]][which(.interaction[[j]] == .predictors[i])] <-
-              paste0("scale(", .predictors[i], ")")
-          }
+      for (j in seq_along(.interaction)) {
+        if (.predictor %in% .interaction[[j]]) {
+          .interaction[[j]][which(.interaction[[j]] == .predictor)] <-
+            paste0("scale(", .predictor, ")")
         }
       }
     }
-    .predictors <- paste0("scale(", .predictors, ")")
+    .predictor <- paste0("scale(", .predictor, ")")
   }
-
+  
   # If wanted, standardize covariates
   ## With .annotation
   if (!is.null(.std_cov) && !is.null(.annotation)) {
@@ -96,9 +92,9 @@ reg_log_predictors <- function(.data
         paste0("std(",
                .annotation[.covariates[.covariates == .std_cov[i]], "pname"],
                ")"
-              )
+        )
       .annotation <- rbind(.annotation, c(name, pname, "", "", ""))
-
+      
       # Check if covariate is in interaction and standardize as well
       if (!is.null(.interaction)) {
         for (j in seq_along(.interaction)) {
@@ -108,19 +104,19 @@ reg_log_predictors <- function(.data
           }
         }
       }
-
-    .covariates[.covariates == .std_cov[i]] <-
-      paste0("scale(",
-             .covariates[.covariates == .std_cov[i]],
-             ")"
-            )
+      
+      .covariates[.covariates == .std_cov[i]] <-
+        paste0("scale(",
+               .covariates[.covariates == .std_cov[i]],
+               ")"
+        )
     }
     rownames(.annotation) <- .annotation[[1]]
-
-  ## Without .annotation
+    
+    ## Without .annotation
   } else if (!is.null(.std_cov) && is.null(.annotation)) {
     for (i in seq_along(.std_cov)) {
-
+      
       # Check if covariate is in interaction and standardize as well
       if (!is.null(.interaction)) {
         for (j in seq_along(.interaction)) {
@@ -132,12 +128,12 @@ reg_log_predictors <- function(.data
       }
       .covariates[.covariates == .std_cov[i]] <-
         paste0("scale(",
-          .covariates[.covariates == .std_cov[i]],
-          ")"
-          )
+               .covariates[.covariates == .std_cov[i]],
+               ")"
+        )
     }
   }
-
+  
   # Create annotation entries for interaction-terms, if .interaction != NULL
   ## With .annotation
   if (!is.null(.interaction) && !is.null(.annotation)) {
@@ -150,30 +146,30 @@ reg_log_predictors <- function(.data
                       .annotation[[2]][which(.annotation[[1]] %in%
                                                vars[2])])
       .annotation <- rbind(.annotation, c(name, pname, "", "", ""))
-
+      
       .interaction[[i]] <- paste0(.interaction[[i]], collapse = "*")
     }
     rownames(.annotation) <- .annotation[[1]]
-
-  ## Without .annotation
+    
+    ## Without .annotation
   } else if (!is.null(.interaction) && is.null(.annotation)) {
     for (i in seq_along(.interaction)) {
       .interaction[[i]] <- paste0(.interaction[[i]], collapse = "*")
     }
   }
-
-  # Seq along the predictors (actual analyses)
-  for (i in seq_along(.predictors)) {
-    if (.predictors[i] == "base_model") {
-      formula <- paste0(paste(.outcome), "~", paste(.covariates,
-                                                     collapse = "+"))
+  
+  # Seq along the outcomes (actual analyses)
+  for (i in seq_along(.outcomes)) {
+    if (.predictor == "base_model") {
+      formula <- paste0(paste(.outcomes[i]), "~", paste(.covariates,
+                                                    collapse = "+"))
     } else {
       if (!is.null(.covariates)) {
         if (!is.null(.interaction)) {
           formula <- paste0(
-            paste(.outcome),
+            paste(.outcomes[i]),
             "~",
-            paste(.predictors[i]),
+            paste(.predictor),
             "+",
             paste(.covariates, collapse = "+"),
             "+",
@@ -181,21 +177,21 @@ reg_log_predictors <- function(.data
           )
         } else {
           formula <- paste0(
-            paste(.outcome),
+            paste(.outcomes[i]),
             "~",
-            paste(.predictors[i]),
+            paste(.predictor),
             "+",
             paste(.covariates, collapse = "+")
           )
         }
       } else {
-        formula <- paste0(paste(.outcome),
+        formula <- paste0(paste(.outcomes[i]),
                           "~",
-                          paste(.predictors[i])
-                          )
+                          paste(.predictor, collapse = "+") #??????????????????
+        )
       }
     }
-
+    
     # Select the right method for data.frame or mids
     if (is.data.frame(.data)) {
       model <- stats::glm(formula, family = "binomial", data = .data, x = TRUE)
@@ -218,44 +214,45 @@ reg_log_predictors <- function(.data
                "(",
                formula,
                ", family = binomial, x = TRUE))"
-              )
+        )
       model_tidy <- tibble::as_tibble(broom::tidy(mice::pool(model),
                                                   conf.int = TRUE)
-                                      )
+      )
       model_glance <- tibble::as_tibble(broom::glance(mice::pool(model),))
     }
-
+    
     # Add pretty names to the table if annotation is available
     if (!is.null(.annotation)) {
       for (j in 2:nrow(model_tidy)) {
         model_tidy$term[j] <-
           .annotation[["pname"]][which(.annotation[["name"]] %in%
-                                      model_tidy$term[j])]
+                                         model_tidy$term[j])]
       }
     }
     fit_list[[i]] <- dplyr::select(model_tidy, tidyselect::all_of(c(
-                                   "term",
-                                   "estimate",
-                                   "conf.low",
-                                   "conf.high",
-                                   "p.value"))
-                                  )
+      "term",
+      "estimate",
+      "conf.low",
+      "conf.high",
+      "p.value"))
+    )
     fit_list[[i]][ncol(fit_list[[i]]) + 1] <- NA
     fit_list[[i]][nrow(fit_list[[i]]) + 1, 1] <- "nobs"
     fit_list[[i]][nrow(fit_list[[i]]), 7] <- model_glance$nobs
     names(fit_list[[i]][7]) <- "info"
     fit_list[[i]][6] <- ifelse(fit_list[[i]]$p.value < .05, "*", NA_character_)
     names(fit_list[[i]])[6] <- "significance"
-    }
-  names(fit_list) <- .predictors
-
+  }
+  names(fit_list) <- .outcomes
+  
   # Add summary if wanted
   if (.summary == TRUE) {
     fit_list[["summary"]] <-
-      reg_log_predictors_summary(.fit_list = fit_list
-                                 , .outcome = .outcome
-                                 , .annotation = .annotation
-                                )
+      reg_log_outcomes_summary(.fit_list = fit_list
+                               , .outcomes = .outcomes
+                               , .predictor = .predictor
+                               , .annotation = .annotation
+      )
   }
   fit_list
 }

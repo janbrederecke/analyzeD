@@ -48,7 +48,7 @@ internal_data <- function(size = 1
     .interaction <<- c("year * year2", "year2 * year3")
 }
 
-internal_data(bin_out = TRUE)
+internal_data(bin_out = FALSE)
 
 
 
@@ -96,17 +96,18 @@ regression_lin(
 )
 
 internal_data(bin_out = TRUE)
-reg_log_predictors(
+reg_log_outcomes(
   .data = .data
-, .outcome = .outcome
-, .predictors = .predictors
+, .outcomes = .outcomes
+, .predictor = .predictors[1]
 , .covariates = .covariates
 , .annotation = .annotation
 , .summary = FALSE
 , .std_prd = FALSE
 , .std_cov = NULL
-, .interaction = NULL
-, .firth = FALSE
+, .interaction = list(c("year", "year2"),
+                      c("year2", "year3")),
+, .firth = TRUE
 )
 
 

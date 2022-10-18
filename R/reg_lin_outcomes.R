@@ -177,7 +177,7 @@ reg_lin_outcomes <- function(.data
       } else {
         formula <- paste0(paste(.outcomes[i]),
                                 "~",
-                                paste(.predictor, collapse = "+")
+                                paste(.predictor, collapse = "+") #?????????????
                           )
       }
     }
@@ -245,7 +245,7 @@ reg_lin_outcomes <- function(.data
                                , .outcomes = .outcomes
                                , .predictor = .predictor
                                , .annotation = .annotation
-                              )
+      )
   }
   fit_list
 }

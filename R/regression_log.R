@@ -1,6 +1,7 @@
 #' @title regression_log
 #'
-#' @description Calculates logistic regression models using glm() or brglm().
+#' @description Calculates logistic regression models using glm()
+#' or brglm() / brglm2.
 #' Designed to make analysis with multiple predictors / outcomes easy and quick.
 #'
 #' @param .data A data.frame or .mids object.

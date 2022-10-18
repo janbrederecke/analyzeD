@@ -3,4 +3,5 @@
 S3method(create_table,reglin)
 export(create_table)
 export(regression_lin)
+export(regression_log)
 importFrom(foreach,"%dopar%")
