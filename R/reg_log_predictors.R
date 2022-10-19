@@ -200,29 +200,34 @@ reg_log_predictors <- function(.data
     if (is.data.frame(.data)) {
       model <- stats::glm(formula, family = "binomial", data = .data, x = TRUE)
       if (.firth == TRUE) {
-        model <- stats::update(model, method = "brglm2::brglm_fit", type = "AS_mean")
+        require(brglm2)
+        model <- stats::update(model, method = "brglm_fit", type = "AS_mean")
         print("Using Firth-corrected logistic regression.")
       }
       model_tidy <- broom::tidy(model, conf.int = TRUE)
       model_glance <- broom::glance(model)
     } else if (mice::is.mids(.data)) {
       if (.firth == TRUE) {
-        model_type <- "brglm::brglm"
+        require(brglm)
+        model_type <- "brglm"
         print("Using Firth-corrected logistic regression.")
       } else {
         model_type <- "glm"
       }
       text2eval <-
-        paste0("model <- with(data, exp = ",
+        paste0("model <- with(.data, exp = ",
                model_type,
                "(",
                formula,
-               ", family = binomial, x = TRUE))"
+               ", family = \"binomial\", x = TRUE))"
               )
+      eval(parse(text = text2eval))
       model_tidy <- tibble::as_tibble(broom::tidy(mice::pool(model),
                                                   conf.int = TRUE)
                                       )
+      print(model_tidy)
       model_glance <- tibble::as_tibble(broom::glance(mice::pool(model),))
+      print(model_glance)
     }
 
     # Add pretty names to the table if annotation is available

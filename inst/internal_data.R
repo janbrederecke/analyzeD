@@ -59,7 +59,7 @@ create_table(regression_lin(
 , .covariates = .covariates
 , .annotation = .annotation
 , .sort_by = "outcomes"
-, .cpus = 2
+, .cpus = 1
 , .summary = TRUE
 , .std_prd = FALSE
 , .std_cov = c("year",  "year3")
@@ -96,10 +96,10 @@ regression_lin(
 )
 
 internal_data(bin_out = TRUE)
-reg_log_outcomes(
-  .data = .data
-, .outcomes = .outcomes
-, .predictor = .predictors[1]
+reg_log_predictors(
+  .data = .imp_data
+, .outcome = .outcome
+, .predictors = .predictors
 , .covariates = .covariates
 , .annotation = .annotation
 , .summary = FALSE
