@@ -1,4 +1,4 @@
-# analyzeD
+# analyzeD <img src="man/figures/analyzeD.jpeg" width="200" height="200" align="right" />
 
 R package with useful functions for data analysis and reporting.
 
