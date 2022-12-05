@@ -14,7 +14,8 @@ create_table.reglin <- function(.fit_list
                                    , .only_summary = FALSE
                                    , ...
 ){
-
+  
+  
   # Check input object
   if (!"reglin" %in% class(.fit_list)) {
     stop("fit_list must be a list of type 'reglin'")
@@ -25,7 +26,7 @@ create_table.reglin <- function(.fit_list
 
     # Create empty summary table with names of the .fit_list$summary columns
     summary_table <- .fit_list[[1]]$summary[FALSE, ]
-
+    
     # Add all summaries and remove them from the fit_list
     for (i in seq_along(.fit_list)) {
       summary <- .fit_list[[i]]$summary
@@ -33,9 +34,9 @@ create_table.reglin <- function(.fit_list
       summary_table <- rbind(summary_table, summary)
     }
     rm(summary)
-
+    
     # Add pretty HTML names to the summary_table
-    names(summary_table) <- c("Outcome",
+    names(summary_table)[1:10] <- c("Outcome",
                               "Predictor",
                               "Estimate",
                               "CI low",
@@ -46,7 +47,7 @@ create_table.reglin <- function(.fit_list
                               "Adjusted R<sup>2</sup>",
                               "<i>N</i>"
                              )
-
+    
     # Print the summary_table
     print(kableExtra::kable_styling(
       kable_input = knitr::kable(

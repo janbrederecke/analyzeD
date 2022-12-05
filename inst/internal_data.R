@@ -24,7 +24,7 @@ internal_data <- function(size = 1
   }
 
   .data <<- .data
-  .data_miss <- missMethods::delete_MCAR(.data, p = 0.08)
+  .data_miss <<- missMethods::delete_MCAR(.data, p = 0.08)
   .imp_data <<- mice::mice(.data_miss, m = 5, method = "cart")
 
   # Make an annotation file
@@ -53,13 +53,13 @@ internal_data(bin_out = FALSE)
 
 
 
-create_table(regression_lin(
-  .data = .imp_data
+regression_lin(
+  .data = .data
 , .outcomes = .outcomes
 , .predictors = .predictors[1]
 , .covariates = .covariates
 , .annotation = .annotation
-, .sort_by = "outcomes"
+, .sort_by = "predictors"
 , .cpus = 1
 , .summary = TRUE
 , .std_prd = FALSE
@@ -67,7 +67,7 @@ create_table(regression_lin(
 , .interaction = list(c(.predictors[1], "year2"),
                       c("year2", "year3")
                      )
-), .only_summary = TRUE)
+)
 
 print("------------")
 print("------------")
@@ -80,21 +80,24 @@ print("------------")
 print("------------")
 print("------------")
 
-regression_lin(
+test <- regression_lin(
   .data = .data
 , .outcomes = .outcomes
 , .predictors = c("base_model", .predictors)
 , .covariates = .covariates
 , .annotation = .annotation
 , .sort_by = "outcomes"
-, .cpus = 2
+, .cpus = 1
 , .summary = TRUE
-, .std_prd = FALSE
+, .std_prd = TRUE
 , .std_cov = c("year", "year3")
 , .interaction = list(c("year", "year2"),
                       c("year2", "year3")
-                     )
-)
+                     ))
+
+print(test)
+
+create_table(test, .only_summary = T)
 
 print("------------")
 print("------------")
@@ -109,7 +112,7 @@ print("------------")
 
 internal_data(bin_out = TRUE)
 
-create_table(reg_log_predictors(
+x <- reg_log_predictors(
   .data = .data
 , .outcome = .outcome
 , .predictors = .predictors
@@ -121,12 +124,22 @@ create_table(reg_log_predictors(
 , .interaction = list(c("year", "year2"),
                       c("year2", "year3")),
 , .firth = TRUE
-))
+)
 
 
+print("------------")
+print("------------")
+print("------------")
+print("------------")
+print("------------")
+print("------------")
+print("------------")
+print("------------")
+print("------------")
+print("------------")
 
-create_table(regression_log(
-  .data = .data
+test_log <- regression_log(
+  .data = .imp_data
   , .outcomes = .outcomes
   , .predictors = c("base_model", .predictors)
   , .covariates = .covariates
@@ -134,13 +147,16 @@ create_table(regression_log(
   , .sort_by = "outcomes"
   , .cpus = 1
   , .summary = TRUE
-  , .std_prd = FALSE
+  , .std_prd = TRUE
   , .std_cov = c("year", "year3")
   , .interaction = list(c("year", "year2"),
                         c("year2", "year3")
   )
-), .only_summary = TRUE
 )
+
+print(test_log)
+
+create_table(test_log, .only_summary = TRUE)
 
 
 

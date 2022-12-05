@@ -39,6 +39,10 @@ You can get the development version from [GitHub](https://github.com/) with:
 devtools::install_github("janbrederecke/analyzeD")
 ```
 
+## Acknowledgement
 
+The logo was designed by [Tim Brederecke](https://www.instagram.com/timbrederecke/).
 
-Author and maintainer: Jan Brederecke
+## Contact
+Please submit feedback and suggestions through Github's [issues](https://github.com/janbrederecke/prepareD/issues) facility.
+

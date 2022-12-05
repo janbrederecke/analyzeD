@@ -228,7 +228,7 @@ reg_log_predictors <- function(.data
                                                   conf.int = TRUE)
                                       )
 
-      model_glance <- tibble::as_tibble(broom::glance(mice::pool(model),))
+      model_glance <- tibble::as_tibble(broom::glance(mice::pool(model)))
     }
     
     model_tidy$OR <- round(exp(model_tidy$estimate), 2)

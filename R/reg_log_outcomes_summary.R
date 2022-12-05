@@ -39,9 +39,12 @@ reg_log_outcomes_summary <- function(.fit_list
       summary_table <- dplyr::bind_rows(summary_table, .fit_list[[i]][2, ])
     }
     
-    print(.fit_list)
-    
+    summary_table[i, 7] <-
+      .fit_list[[i]][[7]][which(.fit_list[[i]][["term"]] == "nobs")]
   }
+  
+  names(summary_table)[7] <- "nobs"
+  
   # Add the respective outcome to the summary table
   ## In case a pname for the outcome is provided
   if (!exists("pnames_outcomes")) {
