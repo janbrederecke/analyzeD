@@ -56,15 +56,15 @@ create_table(
       regression_lin(
         .data = .data
       , .outcomes = .outcomes
-      , .predictors = .predictors[1]
+      , .predictors = c("base_model", .predictors)
       , .covariates = .covariates
       , .annotation = .annotation
       , .sort_by = "predictors"
-      , .cpus = 1
+      , .cpus = 2
       , .summary = TRUE
       , .std_prd = FALSE
       , .std_cov = c("year",  "year3")
-      , .interaction = list(c(.predictors[1], "year2"),
+      , .interaction = list(c("year", "year2"),
                             c("year2", "year3")
                            )
     )
@@ -89,8 +89,8 @@ create_table(
     , .predictors = c("base_model", .predictors)
     , .covariates = .covariates
     , .annotation = .annotation
-    , .sort_by = "outcomes"
-    , .cpus = 1
+    , .sort_by = "predictors"
+    , .cpus = 2
     , .summary = TRUE
     , .std_prd = TRUE
     , .std_cov = c("year", "year3")
@@ -117,9 +117,9 @@ internal_data(bin_out = TRUE)
   
 create_table(  
   regression_log(
-      .data = .data
+      .data = .imp_data
     , .outcomes = .outcomes
-    , .predictors = .predictors
+    , .predictors = c("base_model", .predictors)
     , .covariates = .covariates
     , .annotation = .annotation
     , .sort_by = "predictors"
@@ -127,7 +127,7 @@ create_table(
     , .std_prd = TRUE
     , .std_cov = TRUE
     , .interaction = list(c("year", "year2"),
-                          c("year2", "year3")),
+                          c("year2", "year3"))
     , .firth = TRUE
   )
   , .only_summary = TRUE
@@ -151,15 +151,15 @@ create_table(
     , .predictors = c("base_model", .predictors)
     , .covariates = .covariates
     , .annotation = .annotation
-    , .sort_by = "outcomes"
-    , .cpus = 1
+    , .sort_by = "predictors"
+    , .cpus = 2
     , .summary = TRUE
     , .subset = "body_mass_g > 5"
     , .std_prd = TRUE
     , .std_cov = c("year", "year3")
     , .interaction = list(c("year", "year2"),
-                          c("year2", "year3")
-    )
+                          c("year2", "year3"))
+    , .firth = TRUE
   )
   , .only_summary = TRUE
 )
@@ -177,7 +177,7 @@ print("------------")
 
 create_table(
   regression_log(
-    .data = .data_miss
+    .data = .imp_data
     , .outcomes = .outcomes
     , .predictors = c("base_model", .predictors)
     , .covariates = .covariates
@@ -189,8 +189,8 @@ create_table(
     , .std_prd = TRUE
     , .std_cov = c("year", "year3")
     , .interaction = list(c("year", "year2"),
-                          c("year2", "year3")
-    )
+                          c("year2", "year3"))
+    , .firth = TRUE
   )
   , .only_summary = TRUE
 )

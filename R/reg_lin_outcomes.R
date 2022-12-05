@@ -30,13 +30,15 @@ reg_lin_outcomes <- function(.data
 ){
 
   # Filter out cases that miss the predictor
-  ## For input data.frame
-  if (is.data.frame(.data)) {
-    .data <- dplyr::filter(.data, !is.na(tidyselect::all_of(.predictor)))
-
-  ## For input mids object
-  } else if (mice::is.mids(.data)) {
-    .data <- mice::filter(.data, !is.na(.data[[.predictor]]))
+  if (.predictor != "base_model") {
+    ## For input data.frame
+    if (is.data.frame(.data)) {
+      .data <- dplyr::filter(.data, !is.na(tidyselect::all_of(.predictor)))
+      
+      ## For input mids object
+    } else if (mice::is.mids(.data)) {
+      .data <- mice::filter(.data, !is.na(.data[[.predictor]]))
+    }
   }
 
   # Create output-list of length .outcomes
@@ -174,12 +176,7 @@ reg_lin_outcomes <- function(.data
             paste(.covariates, collapse = "+")
           )
         }
-      } else {
-        formula <- paste0(paste(.outcomes[i]),
-                                "~",
-                                paste(.predictor, collapse = "+") #?????????????
-                          )
-      }
+      } 
     }
 
     # Select the right method for data.frame or mids

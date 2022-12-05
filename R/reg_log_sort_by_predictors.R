@@ -78,7 +78,7 @@ reg_log_sort_by_predictors <- function(.data
     # Calculate regressions for each outcome on a single CPU
     fit_list <- foreach::foreach(
       i = 1:n,
-      .packages = c("broom", "dplyr", "stringr", "tidyselect"),
+      .packages = c("broom", "dplyr", "stringr", "tidyselect", "brglm", "brglm2"),
       .export = c("reg_log_outcomes",
                   "reg_log_outcomes_summary"
                  )

@@ -18,7 +18,8 @@
 #' @param .firth If TRUE, Firth-correction is used via brglm().
 #' @param ... Optional input passed directly to the regression function.
 #'
-#'@importFrom brglm2 "brglm_fit"
+#' @importFrom brglm2 "brglm_fit"
+#' @importFrom brglm "brglm"
 #'
 reg_log_outcomes <- function(.data
                                , .outcomes
@@ -34,13 +35,15 @@ reg_log_outcomes <- function(.data
 ){
   
   # Filter out cases that miss the predictor
-  ## For input data.frame
-  if (is.data.frame(.data)) {
-    .data <- dplyr::filter(.data, !is.na(tidyselect::all_of(.predictor)))
-    
-    ## For input mids object
-  } else if (mice::is.mids(.data)) {
-    .data <- mice::filter(.data, !is.na(.data[[.predictor]]))
+  if (.predictor != "base_model") {
+    ## For input data.frame
+    if (is.data.frame(.data)) {
+      .data <- dplyr::filter(.data, !is.na(tidyselect::all_of(.predictor)))
+      
+      ## For input mids object
+    } else if (mice::is.mids(.data)) {
+      .data <- mice::filter(.data, !is.na(.data[[.predictor]]))
+    }
   }
   
   # Create output-list of length .outcomes
@@ -186,19 +189,14 @@ reg_log_outcomes <- function(.data
             paste(.covariates, collapse = "+")
           )
         }
-      } else {
-        formula <- paste0(paste(.outcomes[i]),
-                          "~",
-                          paste(.predictor, collapse = "+") #??????????????????
-        )
-      }
+      } 
     }
     
     # Select the right method for data.frame or mids
     if (is.data.frame(.data)) {
       model <- stats::glm(formula, family = "binomial", data = .data, x = TRUE)
       if (.firth == TRUE) {
-        #require(brglm2)
+        requireNamespace("brglm2")
         model <- stats::update(model, method = "brglm_fit", type = "AS_mean")
         print("Using Firth-corrected logistic regression.")
       }
@@ -206,7 +204,7 @@ reg_log_outcomes <- function(.data
       model_glance <- broom::glance(model)
     } else if (mice::is.mids(.data)) {
       if (.firth == TRUE) {
-        #require(brglm2)
+        requireNamespace("brglm")
         model_type <- "brglm"
         print("Using Firth-corrected logistic regression.")
       } else {

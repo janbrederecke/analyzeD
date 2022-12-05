@@ -88,7 +88,6 @@ regression_lin <- function(.data
   }
 
   ## Warn if outcomes appear binary
-  print(outcomes_unique_values)
   if (any(outcomes_unique_values <= 2)) {
     print("You seem to have binary outcomes in your data.")
   }

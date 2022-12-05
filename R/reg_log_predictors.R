@@ -18,7 +18,8 @@
 #' @param .firth If TRUE, Firth-correction is used via brglm().
 #' @param ... Optional input passed directly to the regression function.
 #'
-#'#'@importFrom brglm2 "brglm_fit"
+#' @importFrom brglm2 "brglm_fit"
+#' @importFrom brglm "brglm"
 #'
 reg_log_predictors <- function(.data
                                , .predictors
@@ -202,7 +203,7 @@ reg_log_predictors <- function(.data
     if (is.data.frame(.data)) {
       model <- stats::glm(formula, family = "binomial", data = .data, x = TRUE)
       if (.firth == TRUE) {
-        #require(brglm2)
+        requireNamespace("brglm2")
         model <- stats::update(model, method = "brglm_fit", type = "AS_mean")
         print("Using Firth-corrected logistic regression.")
       }
@@ -210,7 +211,7 @@ reg_log_predictors <- function(.data
       model_glance <- broom::glance(model)
     } else if (mice::is.mids(.data)) {
       if (.firth == TRUE) {
-        #require(brglm)
+        requireNamespace("brglm")
         model_type <- "brglm"
         print("Using Firth-corrected logistic regression.")
       } else {
