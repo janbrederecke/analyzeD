@@ -18,6 +18,8 @@
 #' @param .firth If TRUE, Firth-correction is used via brglm().
 #' @param ... Optional input passed directly to the regression function.
 #'
+#'#'@importFrom brglm2 "brglm_fit"
+#'
 reg_log_predictors <- function(.data
                                , .predictors
                                , .covariates
@@ -200,7 +202,7 @@ reg_log_predictors <- function(.data
     if (is.data.frame(.data)) {
       model <- stats::glm(formula, family = "binomial", data = .data, x = TRUE)
       if (.firth == TRUE) {
-        require(brglm2)
+        #require(brglm2)
         model <- stats::update(model, method = "brglm_fit", type = "AS_mean")
         print("Using Firth-corrected logistic regression.")
       }
@@ -208,7 +210,7 @@ reg_log_predictors <- function(.data
       model_glance <- broom::glance(model)
     } else if (mice::is.mids(.data)) {
       if (.firth == TRUE) {
-        require(brglm)
+        #require(brglm)
         model_type <- "brglm"
         print("Using Firth-corrected logistic regression.")
       } else {
@@ -225,10 +227,13 @@ reg_log_predictors <- function(.data
       model_tidy <- tibble::as_tibble(broom::tidy(mice::pool(model),
                                                   conf.int = TRUE)
                                       )
-      print(model_tidy)
+
       model_glance <- tibble::as_tibble(broom::glance(mice::pool(model),))
-      print(model_glance)
     }
+    
+    model_tidy$OR <- round(exp(model_tidy$estimate), 2)
+    model_tidy$low <- round(exp(model_tidy$conf.low), 2)
+    model_tidy$high <- round(exp(model_tidy$conf.high), 2)
 
     # Add pretty names to the table if annotation is available
     if (!is.null(.annotation)) {
@@ -240,9 +245,9 @@ reg_log_predictors <- function(.data
     }
     fit_list[[i]] <- dplyr::select(model_tidy, tidyselect::all_of(c(
                                    "term",
-                                   "estimate",
-                                   "conf.low",
-                                   "conf.high",
+                                   "OR",
+                                   "low",
+                                   "high",
                                    "p.value"))
                                   )
     fit_list[[i]][ncol(fit_list[[i]]) + 1] <- NA

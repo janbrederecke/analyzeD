@@ -42,7 +42,9 @@ list(c("variable1", "variable2"), c("variable2", "variable3")).}
 
 \item{.firth}{If TRUE, Firth-correction is used via brglm().}
 
-\item{...}{Optional input passed directly to the regression function.}
+\item{...}{Optional input passed directly to the regression function.
+
+#'@importFrom brglm2 "brglm_fit"}
 }
 \description{
 This function calculates the regressions while shuffeling

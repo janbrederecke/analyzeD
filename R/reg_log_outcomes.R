@@ -18,6 +18,8 @@
 #' @param .firth If TRUE, Firth-correction is used via brglm().
 #' @param ... Optional input passed directly to the regression function.
 #'
+#'@importFrom brglm2 "brglm_fit"
+#'
 reg_log_outcomes <- function(.data
                                , .outcomes
                                , .predictor
@@ -196,30 +198,38 @@ reg_log_outcomes <- function(.data
     if (is.data.frame(.data)) {
       model <- stats::glm(formula, family = "binomial", data = .data, x = TRUE)
       if (.firth == TRUE) {
-        model <- stats::update(model, method = "brglm2::brglm_fit", type = "AS_mean")
+        #require(brglm2)
+        model <- stats::update(model, method = "brglm_fit", type = "AS_mean")
         print("Using Firth-corrected logistic regression.")
       }
       model_tidy <- broom::tidy(model, conf.int = TRUE)
       model_glance <- broom::glance(model)
     } else if (mice::is.mids(.data)) {
       if (.firth == TRUE) {
-        model_type <- "brglm::brglm"
+        #require(brglm2)
+        model_type <- "brglm"
         print("Using Firth-corrected logistic regression.")
       } else {
         model_type <- "glm"
       }
       text2eval <-
-        paste0("model <- with(data, exp = ",
+        paste0("model <- with(.data, exp = ",
                model_type,
                "(",
                formula,
-               ", family = binomial, x = TRUE))"
+               ", family = \"binomial\", x = TRUE))"
         )
+      eval(parse(text = text2eval))
       model_tidy <- tibble::as_tibble(broom::tidy(mice::pool(model),
                                                   conf.int = TRUE)
       )
+
       model_glance <- tibble::as_tibble(broom::glance(mice::pool(model),))
     }
+    
+    model_tidy$OR <- round(exp(model_tidy$estimate), 2)
+    model_tidy$low <- round(exp(model_tidy$conf.low), 2)
+    model_tidy$high <- round(exp(model_tidy$conf.high), 2)
     
     # Add pretty names to the table if annotation is available
     if (!is.null(.annotation)) {
@@ -231,9 +241,9 @@ reg_log_outcomes <- function(.data
     }
     fit_list[[i]] <- dplyr::select(model_tidy, tidyselect::all_of(c(
       "term",
-      "estimate",
-      "conf.low",
-      "conf.high",
+      "OR",
+      "low",
+      "high",
       "p.value"))
     )
     fit_list[[i]][ncol(fit_list[[i]]) + 1] <- NA
