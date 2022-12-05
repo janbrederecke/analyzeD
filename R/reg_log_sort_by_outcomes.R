@@ -105,9 +105,9 @@ reg_log_sort_by_outcomes <- function(.data
       ## Return the list of results per outcome
       return(fit_list_predictors)
     }
-
+    
     # Stop the cluster
-    parallel::stopCluster(cl = my_cluster)
+    on.exit(parallel::stopCluster(cl = my_cluster))
   }
 
   # Name the list of lists using the respective outcomes

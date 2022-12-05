@@ -52,21 +52,23 @@ internal_data <- function(size = 1
 internal_data(bin_out = FALSE)
 
 
-
-regression_lin(
-  .data = .data
-, .outcomes = .outcomes
-, .predictors = .predictors[1]
-, .covariates = .covariates
-, .annotation = .annotation
-, .sort_by = "predictors"
-, .cpus = 1
-, .summary = TRUE
-, .std_prd = FALSE
-, .std_cov = c("year",  "year3")
-, .interaction = list(c(.predictors[1], "year2"),
-                      c("year2", "year3")
-                     )
+create_table(
+      regression_lin(
+        .data = .data
+      , .outcomes = .outcomes
+      , .predictors = .predictors[1]
+      , .covariates = .covariates
+      , .annotation = .annotation
+      , .sort_by = "predictors"
+      , .cpus = 1
+      , .summary = TRUE
+      , .std_prd = FALSE
+      , .std_cov = c("year",  "year3")
+      , .interaction = list(c(.predictors[1], "year2"),
+                            c("year2", "year3")
+                           )
+    )
+    , .only_summary = TRUE
 )
 
 print("------------")
@@ -80,83 +82,120 @@ print("------------")
 print("------------")
 print("------------")
 
-test <- regression_lin(
-  .data = .data
-, .outcomes = .outcomes
-, .predictors = c("base_model", .predictors)
-, .covariates = .covariates
-, .annotation = .annotation
-, .sort_by = "outcomes"
-, .cpus = 1
-, .summary = TRUE
-, .std_prd = TRUE
-, .std_cov = c("year", "year3")
-, .interaction = list(c("year", "year2"),
-                      c("year2", "year3")
-                     ))
+create_table(
+  regression_lin(
+      .data = .imp_data
+    , .outcomes = .outcomes
+    , .predictors = c("base_model", .predictors)
+    , .covariates = .covariates
+    , .annotation = .annotation
+    , .sort_by = "outcomes"
+    , .cpus = 1
+    , .summary = TRUE
+    , .std_prd = TRUE
+    , .std_cov = c("year", "year3")
+    , .interaction = list(c("year", "year2"),
+                          c("year2", "year3")
+                         )
+  )
+  , .only_summary = T
+)
 
-print(test)
+print("------------")
+print("------------")
+print("------------")
+print("------------")
+print("------------")
+print("------------")
+print("------------")
+print("------------")
+print("------------")
+print("------------")
 
-create_table(test, .only_summary = T)
-
-print("------------")
-print("------------")
-print("------------")
-print("------------")
-print("------------")
-print("------------")
-print("------------")
-print("------------")
-print("------------")
-print("------------")
 
 internal_data(bin_out = TRUE)
-
-x <- reg_log_predictors(
-  .data = .data
-, .outcome = .outcome
-, .predictors = .predictors
-, .covariates = .covariates
-, .annotation = .annotation
-, .summary = TRUE
-, .std_prd = TRUE
-, .std_cov = TRUE
-, .interaction = list(c("year", "year2"),
-                      c("year2", "year3")),
-, .firth = TRUE
-)
-
-
-print("------------")
-print("------------")
-print("------------")
-print("------------")
-print("------------")
-print("------------")
-print("------------")
-print("------------")
-print("------------")
-print("------------")
-
-test_log <- regression_log(
-  .data = .imp_data
-  , .outcomes = .outcomes
-  , .predictors = c("base_model", .predictors)
-  , .covariates = .covariates
-  , .annotation = .annotation
-  , .sort_by = "outcomes"
-  , .cpus = 1
-  , .summary = TRUE
-  , .std_prd = TRUE
-  , .std_cov = c("year", "year3")
-  , .interaction = list(c("year", "year2"),
-                        c("year2", "year3")
+  
+create_table(  
+  regression_log(
+      .data = .data
+    , .outcomes = .outcomes
+    , .predictors = .predictors
+    , .covariates = .covariates
+    , .annotation = .annotation
+    , .sort_by = "predictors"
+    , .summary = TRUE
+    , .std_prd = TRUE
+    , .std_cov = TRUE
+    , .interaction = list(c("year", "year2"),
+                          c("year2", "year3")),
+    , .firth = TRUE
   )
+  , .only_summary = TRUE
 )
 
-print(test_log)
+print("------------")
+print("------------")
+print("------------")
+print("------------")
+print("------------")
+print("------------")
+print("------------")
+print("------------")
+print("------------")
+print("------------")
 
-create_table(test_log, .only_summary = TRUE)
+create_table(
+  regression_log(
+    .data = .imp_data
+    , .outcomes = .outcomes
+    , .predictors = c("base_model", .predictors)
+    , .covariates = .covariates
+    , .annotation = .annotation
+    , .sort_by = "outcomes"
+    , .cpus = 1
+    , .summary = TRUE
+    , .subset = "body_mass_g > 5"
+    , .std_prd = TRUE
+    , .std_cov = c("year", "year3")
+    , .interaction = list(c("year", "year2"),
+                          c("year2", "year3")
+    )
+  )
+  , .only_summary = TRUE
+)
+
+print("------------")
+print("------------")
+print("------------")
+print("------------")
+print("------------")
+print("------------")
+print("------------")
+print("------------")
+print("------------")
+print("------------")
+
+create_table(
+  regression_log(
+    .data = .data_miss
+    , .outcomes = .outcomes
+    , .predictors = c("base_model", .predictors)
+    , .covariates = .covariates
+    , .annotation = .annotation
+    , .sort_by = "predictors"
+    , .cpus = 1
+    , .summary = TRUE
+    , .subset = "body_mass_g > 5"
+    , .std_prd = TRUE
+    , .std_cov = c("year", "year3")
+    , .interaction = list(c("year", "year2"),
+                          c("year2", "year3")
+    )
+  )
+  , .only_summary = TRUE
+)
+
+
 
 
 
