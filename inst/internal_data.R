@@ -23,9 +23,9 @@ internal_data <- function(size = 1
     .data[, c(3)] <- lapply(.data[,c(3)], as.character)
   }
 
-  .data <<- .data
   .data_miss <<- missMethods::delete_MCAR(.data, p = 0.08)
   .imp_data <<- mice::mice(.data_miss, m = 5, method = "cart")
+  .data <<- mice::complete(.imp_data, 1)
 
   # Make an annotation file
   .annotation <-
@@ -60,7 +60,7 @@ create_table(
       , .covariates = .covariates
       , .annotation = .annotation
       , .sort_by = "predictors"
-      , .cpus = 2
+      , .cpus = 1
       , .summary = TRUE
       , .std_prd = FALSE
       , .std_cov = c("year",  "year3")
@@ -90,7 +90,7 @@ create_table(
     , .covariates = .covariates
     , .annotation = .annotation
     , .sort_by = "predictors"
-    , .cpus = 2
+    , .cpus = 1
     , .summary = TRUE
     , .std_prd = TRUE
     , .std_cov = c("year", "year3")
@@ -152,9 +152,8 @@ create_table(
     , .covariates = .covariates
     , .annotation = .annotation
     , .sort_by = "predictors"
-    , .cpus = 2
+    , .cpus = 1
     , .summary = TRUE
-    , .subset = "body_mass_g > 5"
     , .std_prd = TRUE
     , .std_cov = c("year", "year3")
     , .interaction = list(c("year", "year2"),
@@ -178,24 +177,23 @@ print("------------")
 create_table(
   regression_log(
     .data = .imp_data
-    , .outcomes = .outcomes
+    , .outcomes = c(.outcomes)
     , .predictors = c("base_model", .predictors)
     , .covariates = .covariates
     , .annotation = .annotation
-    , .sort_by = "predictors"
+    , .sort_by = "outcomes"
     , .cpus = 1
     , .summary = TRUE
-    , .subset = "body_mass_g > 5"
     , .std_prd = TRUE
     , .std_cov = c("year", "year3")
     , .interaction = list(c("year", "year2"),
                           c("year2", "year3"))
     , .firth = TRUE
+    , .imputed_predictors = TRUE
+    , .imputed_outcomes = TRUE
   )
   , .only_summary = TRUE
 )
-
-
 
 
 

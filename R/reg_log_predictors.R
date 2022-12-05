@@ -16,6 +16,8 @@
 #' character vectors containing the interaction variables, e.g.
 #' list(c("variable1", "variable2"), c("variable2", "variable3")).
 #' @param .firth If TRUE, Firth-correction is used via brglm().
+#' @param .imputed_predictors If TRUE, cases with imputed predictors are used.
+#' @param .imputed_outcomes If TRUE, cases with imputed outcomes are used.
 #' @param ... Optional input passed directly to the regression function.
 #'
 #' @importFrom brglm2 "brglm_fit"
@@ -31,24 +33,29 @@ reg_log_predictors <- function(.data
                                , .summary
                                , .interaction
                                , .firth
+                               , .imputed_predictors
+                               , .imputed_outcomes
                                , ...
 ){
-
+  
   # Filter out cases that miss the outcome
   ## For input data.frame
   if (is.data.frame(.data)) {
     .data <- dplyr::filter(.data, !is.na(tidyselect::all_of(.outcome)))
 
   ## For input mids object
-  } else if (mice::is.mids(.data)) {
+  } else if (mice::is.mids(.data) && .imputed_outcomes == FALSE) {
     .data <- mice::filter(.data, !is.na(.data[[.outcome]]))
   }
 
-  # Create output-list of length .predictors
-  fit_list <- vector(mode = "list", length = length(.predictors))
-
   # In case the outcome is in .predictors, remove
   .predictors <- .predictors[which(!.predictors %in% .outcome)]
+  
+  # Create output-list of length .predictors
+  fit_list <- vector(mode = "list", length = length(.predictors))
+  
+  # Keep the original .predictors for later operations
+  predictors_original <- .predictors
 
   # If wanted, standardize predictors
   ## With .annotation
@@ -191,12 +198,7 @@ reg_log_predictors <- function(.data
             paste(.covariates, collapse = "+")
           )
         }
-      } else {
-        formula <- paste0(paste(.outcome),
-                          "~",
-                          paste(.predictors[i])
-                          )
-      }
+      } 
     }
 
     # Select the right method for data.frame or mids
@@ -210,6 +212,18 @@ reg_log_predictors <- function(.data
       model_tidy <- broom::tidy(model, conf.int = TRUE)
       model_glance <- broom::glance(model)
     } else if (mice::is.mids(.data)) {
+      
+      if (.imputed_predictors == FALSE) {
+        ## Remove cases with the imputed .predictor (we only impute covariates)
+        if (.predictors[i] != "base_model") {
+          .data_pred <- mice::filter(.data, !is.na(.data[[predictors_original[i]]]))
+        } else {
+          .data_pred <- .data
+        }
+      } else {
+        .data_pred <- .data
+      } 
+      
       if (.firth == TRUE) {
         requireNamespace("brglm")
         model_type <- "brglm"
@@ -218,7 +232,7 @@ reg_log_predictors <- function(.data
         model_type <- "glm"
       }
       text2eval <-
-        paste0("model <- with(.data, exp = ",
+        paste0("model <- with(.data_pred, exp = ",
                model_type,
                "(",
                formula,
