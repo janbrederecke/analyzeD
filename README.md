@@ -7,7 +7,7 @@ R package with useful functions for data analysis and reporting.
 ### regression_ family
 **Easily compute different kinds of regression**
 
--   `regression_lin()` Calculates linear regression models using `ln()`.
+-   `regression_lin()` Calculates linear regression models using `lm()`.
 
 -   `regression_log()` Calculates logistic regression models using `glm()`.
 
