@@ -21,6 +21,8 @@
 #' @param .interaction Can be used to specify interactions using a list of
 #' character vectors containing the interaction variables, e.g.
 #' list(c("variable1", "variable2"), c("variable2", "variable3")).
+#' @param .imputed_predictors If TRUE, cases with imputed predictors are used.
+#' @param .imputed_outcomes If TRUE, cases with imputed outcomes are used.
 #' @param ... Optional input passed directly to the regression function.
 #'
 #'
@@ -41,6 +43,8 @@ regression_lin <- function(.data
                            , .std_cov = NULL
                            , .summary = FALSE
                            , .interaction = NULL
+                           , .imputed_predictors = FALSE
+                           , .imputed_outcomes = FALSE
                            , ...
 
 ){
@@ -154,6 +158,8 @@ regression_lin <- function(.data
                                     , .std_cov = .std_cov
                                     , .summary = .summary
                                     , .interaction = .interaction
+                                    , .imputed_predictors = .imputed_predictors
+                                    , .imputed_outcomes = .imputed_outcomes
                                     , ...
                                    )
     )
@@ -170,6 +176,8 @@ regression_lin <- function(.data
                                       , .std_cov = .std_cov
                                       , .summary = .summary
                                       , .interaction = .interaction
+                                      , .imputed_predictors = .imputed_predictors
+                                      , .imputed_outcomes = .imputed_outcomes
                                       , ...
                                       )
     )

@@ -52,11 +52,11 @@ reg_log_outcomes <- function(.data
     }
   }
   
-  # Create output-list of length .outcomes
-  fit_list <- vector(mode = "list", length = length(.outcomes))
-  
   # In case the predictor is in .outcomes, remove
   .outcomes <- .outcomes[which(!.outcomes %in% .predictor)]
+  
+  # Create output-list of length .outcomes
+  fit_list <- vector(mode = "list", length = length(.outcomes))
   
   # If wanted, standardize predictor
   ## With .annotation

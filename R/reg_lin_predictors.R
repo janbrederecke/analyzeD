@@ -15,6 +15,8 @@
 #' @param .interaction Can be used to specify interactions using a list of
 #' character vectors containing the interaction variables, e.g.
 #' list(c("variable1", "variable2"), c("variable2", "variable3")).
+#' @param .imputed_predictors If TRUE, cases with imputed predictors are used.
+#' @param .imputed_outcomes If TRUE, cases with imputed outcomes are used.
 #' @param ... Optional input passed directly to the regression function.
 #'
 reg_lin_predictors <- function(.data
@@ -26,6 +28,8 @@ reg_lin_predictors <- function(.data
                                , .std_cov
                                , .summary
                                , .interaction
+                               , .imputed_predictors
+                               , .imputed_outcomes
                                , ...
 ){
 
@@ -35,15 +39,18 @@ reg_lin_predictors <- function(.data
     .data <- dplyr::filter(.data, !is.na(tidyselect::all_of(.outcome)))
 
   ## For input mids object
-  } else if (mice::is.mids(.data)) {
+  } else if (mice::is.mids(.data) && .imputed_outcomes == FALSE) {
     .data <- mice::filter(.data, !is.na(.data[[.outcome]]))
   }
-
-  # Create output-list of length .predictors
-  fit_list <- vector(mode = "list", length = length(.predictors))
-
+  
   # In case the outcome is in .predictors, remove
   .predictors <- .predictors[which(!.predictors %in% .outcome)]
+  
+  # Create output-list of length .predictors
+  fit_list <- vector(mode = "list", length = length(.predictors))
+  
+  # Keep the original .predictors for later operations
+  predictors_original <- .predictors
 
   # If wanted, standardize predictors
   ## With .annotation
@@ -200,7 +207,19 @@ reg_lin_predictors <- function(.data
       model_tidy <- broom::tidy(model, conf.int = TRUE)
       model_glance <- broom::glance(model)
     } else if (mice::is.mids(.data)) {
-      text2eval <- paste0("model <- with(.data, exp = lm(",
+      
+      if (.imputed_predictors == FALSE) {
+        ## Remove cases with the imputed .predictor 
+        if (.predictors[i] != "base_model") {
+          .data_pred <- mice::filter(.data, !is.na(.data[[predictors_original[i]]]))
+        } else {
+          .data_pred <- .data
+        }
+      } else {
+        .data_pred <- .data
+      }
+      
+      text2eval <- paste0("model <- with(.data_pred, exp = lm(",
                           formula,
                           ", x = TRUE))"
       )
