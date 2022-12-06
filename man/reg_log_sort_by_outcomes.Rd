@@ -16,6 +16,8 @@ reg_log_sort_by_outcomes(
   .summary,
   .interaction,
   .firth,
+  .imputed_predictors,
+  .imputed_outcomes,
   ...
 )
 }
@@ -45,6 +47,10 @@ character vectors containing the interaction variables, e.g.
 list(c("variable1", "variable2"), c("variable2", "variable3")).}
 
 \item{.firth}{If TRUE, a Firth-corrected version of glm in brglm() is called.}
+
+\item{.imputed_predictors}{If TRUE, cases with imputed predictors are used.}
+
+\item{.imputed_outcomes}{If TRUE, cases with imputed outcomes are used.}
 
 \item{...}{Optional input passed directly to the regression function.}
 }

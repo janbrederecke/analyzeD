@@ -17,6 +17,8 @@ regression_lin(
   .std_cov = NULL,
   .summary = FALSE,
   .interaction = NULL,
+  .imputed_predictors = FALSE,
+  .imputed_outcomes = FALSE,
   ...
 )
 }
@@ -50,6 +52,10 @@ by "outcomes" or by "predictors".}
 \item{.interaction}{Can be used to specify interactions using a list of
 character vectors containing the interaction variables, e.g.
 list(c("variable1", "variable2"), c("variable2", "variable3")).}
+
+\item{.imputed_predictors}{If TRUE, cases with imputed predictors are used.}
+
+\item{.imputed_outcomes}{If TRUE, cases with imputed outcomes are used.}
 
 \item{...}{Optional input passed directly to the regression function.}
 }

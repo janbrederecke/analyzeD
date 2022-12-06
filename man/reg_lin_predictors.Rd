@@ -14,6 +14,8 @@ reg_lin_predictors(
   .std_cov,
   .summary,
   .interaction,
+  .imputed_predictors,
+  .imputed_outcomes,
   ...
 )
 }
@@ -38,6 +40,10 @@ short_pname, comment) that contains pretty names for the used variables.}
 \item{.interaction}{Can be used to specify interactions using a list of
 character vectors containing the interaction variables, e.g.
 list(c("variable1", "variable2"), c("variable2", "variable3")).}
+
+\item{.imputed_predictors}{If TRUE, cases with imputed predictors are used.}
+
+\item{.imputed_outcomes}{If TRUE, cases with imputed outcomes are used.}
 
 \item{...}{Optional input passed directly to the regression function.}
 }
