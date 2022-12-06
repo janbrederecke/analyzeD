@@ -18,6 +18,8 @@
 #' character vectors containing the interaction variables, e.g.
 #' list(c("variable1", "variable2"), c("variable2", "variable3")).
 #' @param .firth If TRUE, a Firth-corrected version of glm in brglm() is called.
+#' @param .imputed_predictors If TRUE, cases with imputed predictors are used.
+#' @param .imputed_outcomes If TRUE, cases with imputed outcomes are used.
 #' @param ... Optional input passed directly to the regression function.
 #'
 #' @importFrom foreach "%dopar%"
@@ -33,6 +35,8 @@ reg_log_sort_by_predictors <- function(.data
                                        , .summary
                                        , .interaction
                                        , .firth
+                                       , .imputed_predictors
+                                       , .imputed_outcomes
                                        , ...
 ){
 
@@ -50,7 +54,9 @@ reg_log_sort_by_predictors <- function(.data
                               , .std_cov = .std_cov
                               , .summary = .summary
                               , .interaction = .interaction
-                              , .firth
+                              , .firth = .firth
+                              , .imputed_predictors = .imputed_predictors
+                              , .imputed_outcomes = .imputed_outcomes
                               , ...
                               )
     })
@@ -99,7 +105,9 @@ reg_log_sort_by_predictors <- function(.data
         , .std_cov = .std_cov
         , .summary = .summary
         , .interaction = .interaction
-        , .firth
+        , .firth = .firth
+        , .imputed_predictors = .imputed_predictors
+        , .imputed_outcomes = .imputed_outcomes
         , ...
       )
 

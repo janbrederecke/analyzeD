@@ -214,7 +214,7 @@ reg_log_predictors <- function(.data
     } else if (mice::is.mids(.data)) {
       
       if (.imputed_predictors == FALSE) {
-        ## Remove cases with the imputed .predictor (we only impute covariates)
+        ## Remove cases with the imputed .predictor 
         if (.predictors[i] != "base_model") {
           .data_pred <- mice::filter(.data, !is.na(.data[[predictors_original[i]]]))
         } else {

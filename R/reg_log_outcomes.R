@@ -16,6 +16,8 @@
 #' character vectors containing the interaction variables, e.g.
 #' list(c("variable1", "variable2"), c("variable2", "variable3")).
 #' @param .firth If TRUE, Firth-correction is used via brglm().
+#' @param .imputed_predictors If TRUE, cases with imputed predictors are used.
+#' @param .imputed_outcomes If TRUE, cases with imputed outcomes are used.
 #' @param ... Optional input passed directly to the regression function.
 #'
 #' @importFrom brglm2 "brglm_fit"
@@ -31,6 +33,8 @@ reg_log_outcomes <- function(.data
                                , .summary
                                , .interaction
                                , .firth
+                               , .imputed_predictors
+                               , .imputed_outcomes
                                , ...
 ){
   
@@ -41,8 +45,10 @@ reg_log_outcomes <- function(.data
       .data <- dplyr::filter(.data, !is.na(tidyselect::all_of(.predictor)))
       
       ## For input mids object
-    } else if (mice::is.mids(.data)) {
-      .data <- mice::filter(.data, !is.na(.data[[.predictor]]))
+    } else if (mice::is.mids(.data) && .imputed_predictors == FALSE) {
+      if (.predictor != "base_model") {
+        .data <- mice::filter(.data, !is.na(.data[[.predictor]]))
+      }
     }
   }
   
@@ -203,6 +209,14 @@ reg_log_outcomes <- function(.data
       model_tidy <- broom::tidy(model, conf.int = TRUE)
       model_glance <- broom::glance(model)
     } else if (mice::is.mids(.data)) {
+      
+      ## Remove cases with the imputed .outcome 
+      if (.imputed_outcomes == FALSE) {
+        .data_pred <- mice::filter(.data, !is.na(.data[[.outcomes[i]]]))
+      } else {
+        .data_pred <- .data
+      }
+      
       if (.firth == TRUE) {
         requireNamespace("brglm")
         model_type <- "brglm"
@@ -211,7 +225,7 @@ reg_log_outcomes <- function(.data
         model_type <- "glm"
       }
       text2eval <-
-        paste0("model <- with(.data, exp = ",
+        paste0("model <- with(.data_pred, exp = ",
                model_type,
                "(",
                formula,
