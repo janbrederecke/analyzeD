@@ -1,5 +1,6 @@
 rm(list = ls())
 unloadNamespace("analyzeD")
+remove.packages("analyzeD")
 
 devtools::load_all()
 
@@ -56,10 +57,10 @@ create_table(
       regression_lin(
         .data = .imp_data
       , .outcomes = .outcomes
-      , .predictors = c("base_model", .predictors)
-      , .covariates = .covariates
+      , .predictors = c(.predictors)
+      # , .covariates = .covariates
       , .annotation = .annotation
-      , .sort_by = "predictors"
+      , .sort_by = "outcomes"
       , .cpus = 1
       , .summary = TRUE
       , .std_prd = FALSE
@@ -67,7 +68,7 @@ create_table(
       , .interaction = list(c("year", "year2"),
                             c("year2", "year3")
                            )
-      , .imputed_predictors = FALSE
+      , .imputed_predictors = TRUE
       , .imputed_outcomes = FALSE
     )
     , .only_summary = TRUE
@@ -186,11 +187,11 @@ create_table(
   regression_log(
     .data = .imp_data
     , .outcomes = .outcomes
-    , .predictors = c("base_model", .predictors)
-    , .covariates = .covariates
+    , .predictors = c(.predictors)
+    # , .covariates = .covariates
     , .annotation = .annotation
-    , .sort_by = "outcomes"
-    , .cpus = 2
+    , .sort_by = "predictors"
+    , .cpus = 1
     , .summary = TRUE
     , .std_prd = TRUE
     , .std_cov = c("year", "year3")

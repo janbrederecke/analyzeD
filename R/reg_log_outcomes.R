@@ -195,7 +195,13 @@ reg_log_outcomes <- function(.data
             paste(.covariates, collapse = "+")
           )
         }
-      } 
+      } else {
+        formula <- paste0(
+          paste(.outcomes[i]),
+          "~",
+          paste(.predictor)
+        )
+      }
     }
     
     # Select the right method for data.frame or mids

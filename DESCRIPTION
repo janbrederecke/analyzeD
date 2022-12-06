@@ -11,9 +11,9 @@ Description: This package includes functions that were written to make data
              analysis quicker and easier. It is specifically designed for
              standard analyses that shuffle through multiple predictors and/or
              outcomes. All functions can easily be parallelized.
-Depends: R (>= 3.6.0)
+Depends: R (>= 3.6.0), brglm2
 Imports: broom, dplyr, tidyselect, foreach, parallel, doParallel, mice,
-         tibble, brglm, brglm2
+         tibble, brglm
 Suggests: 
     knitr,
     kableExtra,

@@ -110,6 +110,11 @@ regression_lin <- function(.data
   if (!is.null(.covariates) && class(.covariates) != "character") {
     stop("Covariates have to be provided in a vector of type 'character'.")
   }
+  
+  # Check if .covariates has not been specified but "base_model" in .predictors
+  if (is.null(.covariates) && "base_model" %in% .predictors) {
+    stop("Base model can only be calculated with covariates.")
+  }
 
   # Check if .annotation has been specified and is in the right format
   ## Check if annotation has been specified as a matrix and turn to data.frame
