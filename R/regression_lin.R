@@ -75,14 +75,14 @@ regression_lin <- function(.data
   num_unique <- function(x) length(unique(x))
   if (is.data.frame(.data)) {
     outcomes_numeric <- apply(.data[.outcomes], 2, is.numeric)
-    temp_data <- .data[stats::complete.cases(.data[.outcomes]), .outcomes]
+    temp_data <- as.data.frame(.data[stats::complete.cases(.data[.outcomes]), .outcomes])
     outcomes_unique_values <- apply(temp_data, 2, num_unique)
 
   ## For mids object
   } else if (mice::is.mids(.data)) {
     temp_data <- mice::complete(.data, 0)[.outcomes]
     outcomes_numeric <- apply(temp_data, 2, is.numeric)
-    temp_data <- temp_data[stats::complete.cases(temp_data[.outcomes]), .outcomes]
+    temp_data <- as.data.frame(temp_data[stats::complete.cases(temp_data[.outcomes]), .outcomes])
     outcomes_unique_values <- apply(temp_data, 2, num_unique)
   }
 
